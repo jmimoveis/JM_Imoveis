@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JM Imóveis | Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <!-- Carrega os dados locais para inicialização caso o github falhe ou esteja em localhost -->
+  <script src="data.js"></script>
+  <style>
+    :root {
+      --color-pearl: #FAF8F5;
+      --color-leather: #262626;
+      --color-taupe: #A3968D;
+      --color-khaki: #DFDACF;
+      --font-main: 'Montserrat', sans-serif;
+      --transition: all 0.3s ease;
+      
+      --bg-color: var(--color-pearl);
+      --text-color: var(--color-leather);
+      --container-bg: #fff;
+      --border-color: var(--color-khaki);
+      --input-bg: #fff;
+      --input-text: var(--color-leather);
+    }
+    :root[data-theme="dark"] {
+      --bg-color: #121212;
+      --text-color: #f5f5f5;
+      --container-bg: #1e1e1e;
+      --border-color: #333;
+      --input-bg: #2c2c2c;
+      --input-text: #f5f5f5;
+      --color-leather: #f5f5f5;
+      --color-khaki: #333;
+      --color-taupe: #bfaea2;
+      --color-pearl: #121212;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-main); background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; padding: 2rem; transition: background-color 0.3s, color 0.3s; }
+    .container { max-width: 1000px; margin: 0 auto; background: var(--container-bg); padding: 2rem; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: background-color 0.3s; }
+    h1, h2 { font-family: var(--font-main); margin-bottom: 1.5rem; font-weight: 700; }
+    .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--color-khaki); padding-bottom: 1rem; }
+    
+    .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; transition: var(--transition); display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary { background: var(--color-leather); color: var(--color-khaki); }
+    .btn-primary:hover { background: var(--color-taupe); color: #fff; }
+    .btn-secondary { background: transparent; border: 1px solid var(--color-leather); color: var(--color-leather); }
+    .btn-secondary:hover { background: var(--color-leather); color: var(--color-pearl); }
+    .btn-danger { background: #e74c3c; color: white; }
+    .btn-danger:hover { background: #c0392b; }
+    .btn-success { background: #27ae60; color: white; }
+    .btn-success:hover { background: #2ecc71; }
+    
+    .list-item { display: flex; align-items: center; padding: 15px; border: 1px solid var(--border-color); margin-bottom: 10px; border-radius: 4px; background: var(--container-bg); transition: background-color 0.3s, border-color 0.3s; }
+    .list-item-img { width: 80px; height: 60px; object-fit: cover; border-radius: 4px; margin-right: 15px; }
+    .list-item-info { flex: 1; }
+    .list-item-title { font-weight: 600; font-size: 1.1rem; }
+    .list-item-price { color: var(--color-taupe); font-size: 0.9rem; }
+    .list-item-actions { display: flex; gap: 10px; }
+    .icon-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--color-taupe); transition: var(--transition); padding: 5px; }
+    .icon-btn:hover { color: var(--color-leather); }
+    
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; color: var(--color-taupe); margin-bottom: 5px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-family: var(--font-main); font-size: 1rem; background-color: var(--input-bg); color: var(--input-text); transition: all 0.3s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--color-leather); }
+    
+    /* Remove arrows from number inputs */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+
+    /* Custom Radio Buttons */
+    .radio-btn { flex: 1; cursor: pointer; }
+    .radio-btn input { display: none; }
+    .radio-btn span {
+      display: block; width: 100%; text-align: center; padding: 10px;
+      border: 1px solid var(--border-color); border-radius: 4px;
+      background: var(--input-bg); color: var(--input-text); transition: all 0.3s;
+    }
+    .radio-btn input:checked + span {
+      background: var(--color-leather); color: var(--color-khaki); border-color: var(--color-leather);
+    }
+    
+    /* Input with Suffix */
+    .input-with-suffix { position: relative; display: flex; align-items: center; }
+    .input-with-suffix input { padding-right: 40px !important; }
+    .input-with-suffix .suffix { position: absolute; right: 15px; color: var(--color-taupe); font-weight: 500; pointer-events: none; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    
+    #config-panel, #form-panel, #list-panel { display: none; }
+    .active-panel { display: block !important; }
+
+    .status-msg { margin-top: 1rem; padding: 10px; border-radius: 4px; display: none; }
+    .status-msg.error { background: #fadbd8; color: #c0392b; display: block; }
+    .status-msg.success { background: #d5f5e3; color: #27ae60; display: block; }
+    
+    .custom-dialog {
+      border: none;
+      border-radius: 8px;
+      padding: 2rem;
+      background: var(--container-bg);
+      color: var(--text-color);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-width: 400px;
+      margin: auto;
+    }
+    .custom-dialog::backdrop {
+      background: rgba(0,0,0,0.7);
+    }
+    .custom-dialog h3 {
+      margin-bottom: 1rem;
+      font-family: var(--font-main);
+    }
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 1.5rem;
+    }
+  </style>
+  <script>
+    const savedTheme = localStorage.getItem('admin_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+</head>
+<body>
+
+  <!-- DIALOG DE CONFIRMAÇÃO NATIVO HTML -->
+  <dialog id="confirm-dialog" class="custom-dialog">
+    <h3>Excluir Imóvel</h3>
+    <p>Tem certeza que deseja excluir este imóvel?</p>
+    <div class="dialog-actions">
+      <button class="btn btn-secondary" onclick="closeDialog()">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">OK</button>
+    </div>
+  </dialog>
+
+  <div class="container">
+    <div class="header-actions">
+      <h1>JM Imóveis Admin</h1>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <button class="btn btn-secondary" onclick="toggleTheme()" title="Alternar Tema" style="padding: 10px; border-radius: 4px; display: flex; align-items: center; justify-content: center;"><iconify-icon id="theme-icon" icon="lucide:sun" style="font-size: 1.2rem;"></iconify-icon></button>
+        <button class="btn btn-secondary" onclick="showConfig()">Configurações</button>
+        <button class="btn btn-success" onclick="saveToGithub()" id="btn-sync">Sincronizar <iconify-icon icon="mdi:cloud-upload"></iconify-icon></button>
+      </div>
+    </div>
+    
+    <div id="status-container" class="status-msg"></div>
+
+    <!-- PAINEL DE CONFIGURAÇÃO -->
+    <div id="config-panel">
+      <h2>Configurações do GitHub</h2>
+      <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--color-taupe);">Para salvar os dados automaticamente, insira os dados do seu repositório e o Personal Access Token.</p>
+      <div class="form-group">
+        <label>Proprietário do Repositório (Ex: seu-usuario)</label>
+        <input type="text" id="cfg-owner" placeholder="Ex: joaomaria">
+      </div>
+      <div class="form-group">
+        <label>Nome do Repositório (Ex: site-imoveis)</label>
+        <input type="text" id="cfg-repo" placeholder="Ex: site-jm-imoveis">
+      </div>
+      <div class="form-group">
+        <label>Personal Access Token (PAT)</label>
+        <input type="password" id="cfg-token" placeholder="ghp_xxxxxxxxxxxxxx">
+      </div>
+      <button class="btn btn-primary" onclick="saveConfig()">Salvar Configurações</button>
+      <button class="btn btn-secondary" onclick="showList()">Cancelar</button>
+    </div>
+
+    <!-- PAINEL DE LISTAGEM -->
+    <div id="list-panel" class="active-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2>Imóveis Cadastrados</h2>
+        <button class="btn btn-primary" onclick="openForm()">+ Novo Imóvel</button>
+      </div>
+      <div id="imoveis-list"></div>
+    </div>
+
+    <!-- PAINEL DE FORMULÁRIO -->
+    <div id="form-panel">
+      <h2 id="form-title">Cadastrar Imóvel</h2>
+      <input type="hidden" id="imovel-id">
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome do Imóvel</label>
+          <input type="text" id="f-nome" required>
+        </div>
+        <div class="form-group">
+          <label>Construtora</label>
+          <input type="text" id="f-construtora">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Localização</label>
+          <input type="text" id="f-localizacao" required>
+        </div>
+        <div class="form-group">
+          <label>Preço (Ex: R$ 5.990.000,00)</label>
+          <input type="text" id="f-preco" required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tipo</label>
+          <select id="f-tipo">
+            <option value="Apartamento">Apartamento</option>
+            <option value="Casa">Casa</option>
+            <option value="Cobertura">Cobertura</option>
+            <option value="Sala Comercial">Sala Comercial</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Finalidade</label>
+          <div style="display: flex; gap: 10px;">
+            <label class="radio-btn">
+              <input type="radio" name="f-finalidade" value="Compra" checked>
+              <span>Compra</span>
+            </label>
+            <label class="radio-btn">
+              <input type="radio" name="f-finalidade" value="Aluguel">
+              <span>Aluguel</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Quartos</label>
+          <input type="number" id="f-quartos" value="0">
+        </div>
+        <div class="form-group">
+          <label>Suítes</label>
+          <input type="number" id="f-suites" value="0">
+        </div>
+        <div class="form-group">
+          <label>Vagas</label>
+          <input type="number" id="f-vagas" value="0">
+        </div>
+        <div class="form-group">
+          <label>Área</label>
+          <div class="input-with-suffix">
+            <input type="number" id="f-area" placeholder="Ex: 170">
+            <span class="suffix">m²</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Imagens (Anexe do seu computador)</label>
+        <input type="file" id="f-imagens" multiple accept="image/*">
+        <div id="image-preview-container" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;"></div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Badges (Selecione um ou mais)</label>
+          <select id="f-badges" multiple style="height: 100px;">
+            <option value="Exclusividade">Exclusividade</option>
+            <option value="Alto Padrão">Alto Padrão</option>
+            <option value="Locação">Locação</option>
+            <option value="Oportunidade">Oportunidade</option>
+            <option value="Comercial">Comercial</option>
+            <option value="Mobiliado">Mobiliado</option>
+            <option value="Lançamento">Lançamento</option>
+            <option value="Frente Mar">Frente Mar</option>
+            <option value="Decorado">Decorado</option>
+          </select>
+          <small style="color: var(--color-taupe); margin-top: 5px; display: block;">Segure CTRL (ou CMD) para selecionar vários.</small>
+        </div>
+        <div class="form-group">
+          <label>Link do YouTube (Opcional)</label>
+          <input type="text" id="f-youtube" placeholder="https://www.youtube.com/watch?...">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Descrição</label>
+        <textarea id="f-descricao" rows="4"></textarea>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 2rem;">
+        <button class="btn btn-primary" onclick="saveProperty()">Salvar na Lista</button>
+        <button class="btn btn-secondary" onclick="showList()">Cancelar</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let imoveisData = [];
+    let githubConfig = {
+      owner: localStorage.getItem('gh_owner') || '',
+      repo: localStorage.getItem('gh_repo') || '',
+      token: localStorage.getItem('gh_token') || ''
+    };
+
+    // Inicializa a lista a partir do window.imoveis (carregado do data.js)
+    if (window.imoveis) {
+      imoveisData = JSON.parse(JSON.stringify(window.imoveis)); // Clone profundo
+      renderList();
+    }
+
+    function showMsg(text, type) {
+      const el = document.getElementById('status-container');
+      el.className = 'status-msg ' + type;
+      el.innerText = text;
+      setTimeout(() => { el.className = 'status-msg'; }, 5000);
+    }
+
+    function switchPanel(panelId) {
+      document.getElementById('config-panel').classList.remove('active-panel');
+      document.getElementById('list-panel').classList.remove('active-panel');
+      document.getElementById('form-panel').classList.remove('active-panel');
+      document.getElementById(panelId).classList.add('active-panel');
+    }
+
+    function showConfig() {
+      document.getElementById('cfg-owner').value = githubConfig.owner;
+      document.getElementById('cfg-repo').value = githubConfig.repo;
+      document.getElementById('cfg-token').value = githubConfig.token;
+      switchPanel('config-panel');
+    }
+
+    function saveConfig() {
+      githubConfig.owner = document.getElementById('cfg-owner').value.trim();
+      githubConfig.repo = document.getElementById('cfg-repo').value.trim();
+      githubConfig.token = document.getElementById('cfg-token').value.trim();
+      
+      localStorage.setItem('gh_owner', githubConfig.owner);
+      localStorage.setItem('gh_repo', githubConfig.repo);
+      localStorage.setItem('gh_token', githubConfig.token);
+      
+      showMsg('Configurações salvas!', 'success');
+      showList();
+    }
+
+    function showList() {
+      renderList();
+      switchPanel('list-panel');
+    }
+
+    function renderList() {
+      const container = document.getElementById('imoveis-list');
+      container.innerHTML = '';
+      
+      if (imoveisData.length === 0) {
+        container.innerHTML = '<p>Nenhum imóvel cadastrado.</p>';
+        return;
+      }
+
+      imoveisData.forEach((imovel, index) => {
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerHTML = `
+          <img src="${(imovel.imagens && imovel.imagens.length > 0) ? imovel.imagens[0] : imovel.imagem}" class="list-item-img" alt="Foto">
+          <div class="list-item-info">
+            <div class="list-item-title">${imovel.nome} <span style="font-size:0.8rem; font-weight:normal; color:#888;">(ID: ${imovel.id})</span></div>
+            <div class="list-item-price">${imovel.preco} - ${imovel.localizacao}</div>
+          </div>
+          <div class="list-item-actions">
+            <button class="icon-btn" onclick="moveUp(${index})" title="Mover para cima"><iconify-icon icon="mdi:arrow-up"></iconify-icon></button>
+            <button class="icon-btn" onclick="moveDown(${index})" title="Mover para baixo"><iconify-icon icon="mdi:arrow-down"></iconify-icon></button>
+            <button class="icon-btn" onclick="openForm(${imovel.id})" title="Editar"><iconify-icon icon="mdi:pencil"></iconify-icon></button>
+            <button class="icon-btn" onclick="deleteProperty(${imovel.id})" title="Excluir"><iconify-icon icon="mdi:delete" style="color: #e74c3c;"></iconify-icon></button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function moveUp(index) {
+      if (index === 0) return;
+      const temp = imoveisData[index - 1];
+      imoveisData[index - 1] = imoveisData[index];
+      imoveisData[index] = temp;
+      renderList();
+    }
+
+    function moveDown(index) {
+      if (index === imoveisData.length - 1) return;
+      const temp = imoveisData[index + 1];
+      imoveisData[index + 1] = imoveisData[index];
+      imoveisData[index] = temp;
+      renderList();
+    }
+
+    let deleteTargetId = null;
+
+    function deleteProperty(id) {
+      deleteTargetId = id;
+      document.getElementById('confirm-dialog').showModal();
+    }
+
+    function closeDialog() {
+      deleteTargetId = null;
+      document.getElementById('confirm-dialog').close();
+    }
+
+    function confirmDelete() {
+      if (deleteTargetId !== null) {
+        imoveisData = imoveisData.filter(i => i.id !== deleteTargetId);
+        renderList();
+      }
+      closeDialog();
+    }
+    
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('admin_theme', newTheme);
+      document.getElementById('theme-icon').setAttribute('icon', newTheme === 'dark' ? 'lucide:moon' : 'lucide:sun');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('admin_theme') || 'light';
+      document.getElementById('theme-icon').setAttribute('icon', savedTheme === 'dark' ? 'lucide:moon' : 'lucide:sun');
+    });
+
+    let currentImages = []; // Array de base64 ou URLs
+
+    // Resizer and base64 converter
+    function compressImage(file, maxWidth, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          let width = img.width;
+          let height = img.height;
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL('image/jpeg', 0.8)); // compress as JPEG with 80% quality
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    document.getElementById('f-imagens').addEventListener('change', function(e) {
+      const files = Array.from(e.target.files);
+      files.forEach(file => {
+        compressImage(file, 1200, function(base64Str) {
+          currentImages.push(base64Str);
+          renderImagePreviews();
+        });
+      });
+      e.target.value = ''; // Permite selecionar o mesmo arquivo se removido
+    });
+
+    function renderImagePreviews() {
+      const container = document.getElementById('image-preview-container');
+      container.innerHTML = '';
+      currentImages.forEach((src, index) => {
+        const div = document.createElement('div');
+        div.style.position = 'relative';
+        div.style.width = '100px';
+        div.style.height = '75px';
+        div.innerHTML = `
+          <img src="${src}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-color);">
+          <button onclick="removeImage(${index})" type="button" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center;">&times;</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function removeImage(index) {
+      currentImages.splice(index, 1);
+      renderImagePreviews();
+    }
+
+    function openForm(id = null) {
+      document.getElementById('form-title').innerText = id ? 'Editar Imóvel' : 'Novo Imóvel';
+      
+      if (id) {
+        const imovel = imoveisData.find(i => i.id === id);
+        document.getElementById('imovel-id').value = imovel.id;
+        document.getElementById('f-nome').value = imovel.nome || '';
+        document.getElementById('f-construtora').value = imovel.construtora || '';
+        document.getElementById('f-localizacao').value = imovel.localizacao || '';
+        document.getElementById('f-preco').value = imovel.preco || '';
+        document.getElementById('f-tipo').value = imovel.tipo || 'Apartamento';
+        
+        let finalidade = imovel.finalidade || 'Compra';
+        if (finalidade === 'Locação') finalidade = 'Aluguel';
+        const radio = document.querySelector(`input[name="f-finalidade"][value="${finalidade}"]`);
+        if (radio) radio.checked = true;
+
+        document.getElementById('f-quartos').value = imovel.quartos || 0;
+        document.getElementById('f-suites').value = imovel.suites || 0;
+        document.getElementById('f-vagas').value = imovel.vagas || 0;
+        document.getElementById('f-area').value = imovel.area ? imovel.area.replace(/[^\d.]/g, '') : '';
+        document.getElementById('f-youtube').value = imovel.youtube || '';
+        document.getElementById('f-descricao').value = imovel.descricao || '';
+        
+        currentImages = imovel.imagens ? [...imovel.imagens] : (imovel.imagem ? [imovel.imagem] : []);
+        renderImagePreviews();
+        
+        const badgesArr = imovel.badges ? imovel.badges : (imovel.badge ? [imovel.badge] : []);
+        const selectBadges = document.getElementById('f-badges');
+        Array.from(selectBadges.options).forEach(opt => {
+          opt.selected = badgesArr.includes(opt.value);
+        });
+      } else {
+        document.getElementById('imovel-id').value = '';
+        document.getElementById('f-nome').value = '';
+        document.getElementById('f-construtora').value = '';
+        document.getElementById('f-localizacao').value = '';
+        document.getElementById('f-preco').value = '';
+        document.getElementById('f-tipo').value = 'Apartamento';
+        document.querySelector('input[name="f-finalidade"][value="Compra"]').checked = true;
+        document.getElementById('f-quartos').value = 0;
+        document.getElementById('f-suites').value = 0;
+        document.getElementById('f-vagas').value = 0;
+        document.getElementById('f-area').value = '';
+        document.getElementById('f-youtube').value = '';
+        document.getElementById('f-descricao').value = '';
+        
+        currentImages = [];
+        renderImagePreviews();
+        
+        const selectBadges = document.getElementById('f-badges');
+        Array.from(selectBadges.options).forEach(opt => opt.selected = false);
+      }
+      
+      switchPanel('form-panel');
+    }
+
+    function saveProperty() {
+      const idVal = document.getElementById('imovel-id').value;
+      const novoId = idVal ? parseInt(idVal) : Date.now();
+      
+      const selectBadges = document.getElementById('f-badges');
+      const selectedBadges = Array.from(selectBadges.selectedOptions).map(opt => opt.value);
+      
+      const imovel = {
+        id: novoId,
+        nome: document.getElementById('f-nome').value,
+        construtora: document.getElementById('f-construtora').value,
+        localizacao: document.getElementById('f-localizacao').value,
+        preco: document.getElementById('f-preco').value,
+        tipo: document.getElementById('f-tipo').value,
+        finalidade: document.querySelector('input[name="f-finalidade"]:checked').value,
+        quartos: parseInt(document.getElementById('f-quartos').value) || 0,
+        suites: parseInt(document.getElementById('f-suites').value) || 0,
+        vagas: parseInt(document.getElementById('f-vagas').value) || 0,
+        area: document.getElementById('f-area').value ? document.getElementById('f-area').value + ' m²' : '',
+        imagens: [...currentImages],
+        imagem: currentImages.length > 0 ? currentImages[0] : '', // Fallback para codigo antigo
+        youtube: document.getElementById('f-youtube').value,
+        badges: selectedBadges,
+        badge: selectedBadges.length > 0 ? selectedBadges[0] : '', // Fallback
+        descricao: document.getElementById('f-descricao').value,
+      };
+
+      if (!imovel.nome || currentImages.length === 0) {
+        alert('Por favor, preencha pelo menos o Nome e anexe uma Imagem.');
+        return;
+      }
+
+      if (idVal) {
+        const index = imoveisData.findIndex(i => i.id === parseInt(idVal));
+        if (index > -1) imoveisData[index] = imovel;
+      } else {
+        imoveisData.push(imovel);
+      }
+
+      showList();
+    }
+
+    // Função para codificar em base64 corretamente lidando com UTF-8 (acentos)
+    function utf8_to_b64(str) {
+      return window.btoa(unescape(encodeURIComponent(str)));
+    }
+
+    async function saveToGithub() {
+      if (!githubConfig.owner || !githubConfig.repo || !githubConfig.token) {
+        showMsg('Por favor, configure o Token e os dados do repositório primeiro.', 'error');
+        showConfig();
+        return;
+      }
+
+      const btnSync = document.getElementById('btn-sync');
+      btnSync.disabled = true;
+      btnSync.innerHTML = 'Sincronizando... <iconify-icon icon="mdi:loading" class="spin"></iconify-icon>';
+
+      try {
+        const path = 'data.js';
+        const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${path}`;
+        const headers = {
+          'Authorization': `Bearer ${githubConfig.token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        };
+
+        // 1. Tentar pegar o SHA do arquivo atual (se existir)
+        let sha = null;
+        const getRes = await fetch(url, { headers });
+        if (getRes.ok) {
+          const getData = await getRes.json();
+          sha = getData.sha;
+        } else if (getRes.status !== 404) {
+          throw new Error('Falha ao verificar arquivo no repositório. Verifique o repositório e o token.');
+        }
+
+        // 2. Gerar o novo conteúdo do arquivo
+        const newContent = "window.imoveis = " + JSON.stringify(imoveisData, null, 2) + ";";
+        const base64Content = utf8_to_b64(newContent);
+
+        // 3. Fazer o PUT para atualizar/criar
+        const body = {
+          message: 'Atualizando imóveis pelo Admin',
+          content: base64Content
+        };
+        if (sha) body.sha = sha;
+
+        const putRes = await fetch(url, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify(body)
+        });
+
+        if (putRes.ok) {
+          showMsg('Sucesso! Sincronizado com o GitHub. O site será atualizado em alguns minutos.', 'success');
+        } else {
+          const errData = await putRes.json();
+          throw new Error(errData.message || 'Erro desconhecido ao salvar.');
+        }
+      } catch (error) {
+        console.error(error);
+        showMsg('Erro: ' + error.message, 'error');
+      } finally {
+        btnSync.disabled = false;
+        btnSync.innerHTML = 'Sincronizar com GitHub <iconify-icon icon="mdi:cloud-upload"></iconify-icon>';
+      }
+    }
+  </script>
+</body>
+</html>
