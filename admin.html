@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JM Imóveis | Admin</title>
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -39,12 +40,18 @@
       --color-pearl: #121212;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: var(--font-main); background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; padding: 2rem; transition: background-color 0.3s, color 0.3s; }
-    .container { max-width: 1000px; margin: 0 auto; background: var(--container-bg); padding: 2rem; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: background-color 0.3s; }
+    html {
+      scroll-behavior: smooth;
+      overscroll-behavior: none;
+      background-color: var(--bg-color);
+    }
+    body { font-family: var(--font-main); background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; padding: 2rem; transition: background-color 0.3s, color 0.3s; overscroll-behavior: none; }
+    .container { max-width: 1000px; margin: 0 auto; background: var(--container-bg); padding: 2rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: background-color 0.3s; }
     h1, h2 { font-family: var(--font-main); margin-bottom: 1.5rem; font-weight: 700; }
     .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--color-khaki); padding-bottom: 1rem; }
     
-    .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; transition: var(--transition); display: inline-flex; align-items: center; gap: 8px; }
+    .btn { height: 44px; padding: 0 20px; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; transition: var(--transition); display: inline-flex; align-items: center; gap: 8px; }
+    .btn-icon-square { width: 44px; padding: 0; justify-content: center; flex-shrink: 0; }
     .btn-primary { background: var(--color-leather); color: var(--color-khaki); }
     .btn-primary:hover { background: var(--color-taupe); color: #fff; }
     .btn-secondary { background: transparent; border: 1px solid var(--color-leather); color: var(--color-leather); }
@@ -54,37 +61,66 @@
     .btn-success { background: #27ae60; color: white; }
     .btn-success:hover { background: #2ecc71; }
     
-    .list-item { display: flex; align-items: center; padding: 15px; border: 1px solid var(--border-color); margin-bottom: 10px; border-radius: 4px; background: var(--container-bg); transition: background-color 0.3s, border-color 0.3s; }
-    .list-item-img { width: 80px; height: 60px; object-fit: cover; border-radius: 4px; margin-right: 15px; }
+    .list-item { display: flex; align-items: center; padding: 15px; border: 1px solid var(--border-color); margin-bottom: 10px; border-radius: 14px; background: var(--container-bg); transition: background-color 0.3s, border-color 0.3s, transform 0.2s ease, box-shadow 0.2s ease; }
+    .list-item:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+    .list-item-img { width: 80px; height: 60px; object-fit: cover; border-radius: 10px; margin-right: 15px; }
     .list-item-info { flex: 1; }
     .list-item-title { font-weight: 600; font-size: 1.1rem; }
     .list-item-price { color: var(--color-taupe); font-size: 0.9rem; }
     .list-item-actions { display: flex; gap: 10px; }
     .icon-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--color-taupe); transition: var(--transition); padding: 5px; }
     .icon-btn:hover { color: var(--color-leather); }
+    .pending-item { display: flex; flex-direction: column; gap: 8px; padding: 15px; border: 1px solid #e0a63e; margin-bottom: 10px; border-radius: 14px; background: var(--container-bg); }
+    .pending-item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .pending-badge { display: inline-block; background: #e0a63e; color: #fff; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 999px; margin-bottom: 4px; }
+    .pending-item-title { font-weight: 600; font-size: 1.05rem; }
+    .pending-item-meta { font-size: 0.85rem; color: var(--color-taupe); }
+    .pending-item-desc { font-size: 0.85rem; margin-top: 4px; }
+    .pending-item-actions { display: flex; gap: 10px; flex-shrink: 0; }
     
     .form-group { margin-bottom: 1.5rem; }
     .form-group label { display: block; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; color: var(--color-taupe); margin-bottom: 5px; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-family: var(--font-main); font-size: 1rem; background-color: var(--input-bg); color: var(--input-text); transition: all 0.3s; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; font-family: var(--font-main); font-size: 1rem; background-color: var(--input-bg); color: var(--input-text); transition: all 0.3s; }
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--color-leather); }
     
     /* Remove arrows from number inputs */
-    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     input[type=number] { -moz-appearance: textfield; }
 
-    /* Custom Radio Buttons */
-    .radio-btn { flex: 1; cursor: pointer; }
-    .radio-btn input { display: none; }
-    .radio-btn span {
-      display: block; width: 100%; text-align: center; padding: 10px;
-      border: 1px solid var(--border-color); border-radius: 4px;
-      background: var(--input-bg); color: var(--input-text); transition: all 0.3s;
+    /* Dropdown customizado com busca (substitui o <select> nativo do navegador) */
+    .custom-select { position: relative; }
+    .custom-select-input-wrap { position: relative; }
+    .custom-select-trigger {
+      width: 100%; padding: 10px 40px 10px 10px; border: 1px solid var(--border-color); border-radius: 10px;
+      font-family: var(--font-main); font-size: 1rem; background-color: var(--input-bg);
+      color: var(--input-text); transition: all 0.3s;
     }
-    .radio-btn input:checked + span {
-      background: var(--color-leather); color: var(--color-khaki); border-color: var(--color-leather);
+    .custom-select-trigger:focus { outline: none; }
+    .custom-select-chevron {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--color-taupe); pointer-events: none; transition: transform 0.2s ease; font-size: 1.1rem;
     }
-    
+    .custom-select.open .custom-select-chevron { transform: translateY(-50%) rotate(180deg); }
+    .custom-select.open .custom-select-trigger { border-color: var(--color-leather); }
+    .custom-select-panel {
+      display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 20;
+      background: var(--container-bg); border: 1px solid var(--border-color);
+      border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); overflow: hidden;
+    }
+    .custom-select.open .custom-select-panel { display: block; }
+    .custom-select-panel-scroll {
+      max-height: 260px; overflow-y: auto; padding: 6px;
+      -webkit-overflow-scrolling: touch; transform: translateZ(0);
+    }
+    .custom-select-option {
+      padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 0.95rem;
+      color: var(--input-text); transition: background-color 0.15s ease;
+    }
+    .custom-select-option:hover { background: var(--color-khaki); }
+    .custom-select-option.selected { background: var(--color-leather); color: var(--color-khaki); font-weight: 600; }
+    .custom-select-empty { display: none; padding: 10px 12px; font-size: 0.85rem; color: var(--color-taupe); }
+
     /* Input with Suffix */
     .input-with-suffix { position: relative; display: flex; align-items: center; }
     .input-with-suffix input { padding-right: 40px !important; }
@@ -92,7 +128,7 @@
 
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     
-    #config-panel, #form-panel, #list-panel { display: none; }
+    #config-panel, #list-panel { display: none; }
     .active-panel { display: block !important; }
 
     .status-msg { margin-top: 1rem; padding: 10px; border-radius: 4px; display: none; }
@@ -101,7 +137,7 @@
     
     .custom-dialog {
       border: none;
-      border-radius: 8px;
+      border-radius: 20px;
       padding: 2rem;
       background: var(--container-bg);
       color: var(--text-color);
@@ -122,6 +158,169 @@
       gap: 10px;
       margin-top: 1.5rem;
     }
+
+    .spin { animation: spin 1s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .config-help { border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; background: var(--input-bg); }
+    .config-help summary { cursor: pointer; font-weight: 600; color: var(--color-leather); }
+    .config-help ol { margin: 0.75rem 0 0 1.25rem; }
+    .config-help li { margin-bottom: 0.6rem; font-size: 0.9rem; color: var(--text-color); }
+    .config-help li:last-child { margin-bottom: 0; }
+    .config-help a { color: var(--color-leather); text-decoration: underline; }
+    .config-help code { background: var(--color-khaki); color: var(--color-leather); padding: 2px 6px; border-radius: 3px; font-size: 0.85em; }
+
+    /* Dialog dedicado de cadastro/edição de imóvel */
+    .property-dialog {
+      width: min(720px, 92vw);
+      max-height: 85vh;
+      padding: 0;
+      max-width: none;
+    }
+    .property-dialog[open] {
+      display: flex;
+      flex-direction: column;
+    }
+    .property-dialog .dialog-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.75rem 2rem 1rem; flex-shrink: 0;
+    }
+    .property-dialog .dialog-header h2 { margin-bottom: 0; }
+    .property-dialog .dialog-close { font-size: 1.4rem; }
+    .property-dialog .dialog-body {
+      padding: 0 2rem 1.5rem; overflow-y: auto; flex: 1;
+    }
+    .property-dialog .dialog-footer {
+      display: flex; justify-content: flex-end; gap: 12px;
+      padding: 1.25rem 2rem; border-top: 1px solid var(--border-color);
+      background: var(--container-bg); flex-shrink: 0; border-radius: 0 0 20px 20px;
+    }
+    .btn-pill {
+      padding: 12px 30px; border-radius: 999px; border: none; cursor: pointer;
+      font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;
+      transition: var(--transition);
+    }
+    .btn-pill-primary { background: var(--color-leather); color: var(--color-khaki); }
+    .btn-pill-danger:hover { background: #d32f2f; color: white; border-color: #d32f2f; }
+    
+    .btn-detalhes {
+      padding: 0 20px; border: 1px solid var(--border-color); border-radius: 10px; 
+      background-color: transparent; color: var(--text-color); font-weight: 700; 
+      font-size: 0.85rem; cursor: pointer; text-transform: uppercase; transition: all 0.3s;
+    }
+    .btn-detalhes:hover { background-color: var(--color-khaki); }
+    .btn-pill-secondary { background: transparent; border: 1px solid var(--color-leather); color: var(--color-leather); }
+    .btn-pill-secondary:hover { background: var(--color-leather); color: var(--color-pearl); }
+
+    /* Menu de toggles */
+    .toggle-menu { display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 2rem; }
+    .toggle-track { position: relative; display: inline-flex; align-items: center; border-radius: 999px; border: 1px solid var(--border-color); background: var(--input-bg); padding: 3px; }
+    .toggle-pill {
+      position: absolute; top: 3px; bottom: 3px; left: 3px; width: 0; opacity: 0;
+      border-radius: 999px; background: var(--color-leather); z-index: 0;
+      transition: left 0.3s ease, width 0.3s ease, opacity 0.2s ease;
+    }
+    .toggle-labels { display: flex; z-index: 1; }
+    .toggle-option {
+      position: relative; border: none; background: transparent; cursor: pointer;
+      padding: 7px 16px; border-radius: 999px; font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-color);
+      transition: color 0.3s ease; white-space: nowrap; display: flex; align-items: center; justify-content: center;
+    }
+    .toggle-option.active { color: var(--color-khaki); }
+
+    /* Botões customizados: neutraliza a aparência nativa do navegador (evita fundo branco fixo no tema escuro) */
+    .chip-add-btn, .chip-option, .feature-add-btn, .quality-toggle-btn, .quality-hide-btn, .quality-show-btn {
+      appearance: none; -webkit-appearance: none; font-family: var(--font-main);
+    }
+
+    /* Dropzone de imagens */
+    .dropzone {
+      border: 2px dashed var(--border-color); border-radius: 14px; padding: 2rem 1rem;
+      text-align: center; cursor: pointer; transition: all 0.2s ease; background: var(--input-bg); position: relative;
+    }
+    .dropzone:hover, .dropzone.dragover { border-color: var(--color-leather); background: var(--color-khaki); }
+    .dropzone iconify-icon { font-size: 2.2rem; color: var(--color-taupe); }
+    .dropzone p { margin: 0.5rem 0 0.2rem; font-weight: 600; }
+    .dropzone span { font-size: 0.8rem; color: var(--color-taupe); }
+    .dropzone input[type=file] { display: none; }
+    .image-preview-grid { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .img-thumb { position: relative; width: 90px; height: 70px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); }
+    .img-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .img-remove-btn {
+      position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.6); color: #fff; border: none;
+      border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Chips (badges) */
+    .chip-add-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .chip-add-row input { flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; background: var(--input-bg); color: var(--input-text); font-family: var(--font-main); }
+    .chip-add-btn { width: 42px; flex-shrink: 0; border: none; border-radius: 10px; background: var(--color-leather); color: var(--color-khaki); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .chip-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip-option {
+      appearance: none; -webkit-appearance: none;
+      display: flex; align-items: center; gap: 6px; padding: 8px 14px 8px 10px; border-radius: 999px;
+      border: 1px solid var(--border-color); background: var(--input-bg); color: var(--input-text);
+      cursor: pointer; font-size: 0.85rem; font-family: var(--font-main); transition: all 0.2s ease;
+    }
+    .chip-option:hover { background: #e3dcc8; border-color: #d1c8af; color: var(--color-black); }
+    .chip-option iconify-icon:first-child, .chip-option svg:first-child { font-size: 1.05rem; color: var(--color-taupe); }
+    .chip-option .chip-check { display: none; font-size: 1.05rem; }
+    .chip-option.selected { background: var(--color-leather); border-color: var(--color-leather); color: var(--color-khaki); }
+    .chip-option.selected iconify-icon:first-child, .chip-option.selected svg:first-child { color: var(--color-khaki); }
+    .chip-option.selected .chip-check { display: inline-flex; }
+
+    /* Badge Picker Dialog */
+    .badge-icons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap: 8px; margin-top: 10px; }
+    .badge-icon-option { 
+      display: flex; align-items: center; justify-content: center; 
+      width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--border-color); 
+      background: var(--input-bg); color: var(--color-taupe); cursor: pointer; font-size: 1.25rem; transition: all 0.2s ease;
+    }
+    .badge-icon-option:hover { background: #e3dcc8; border-color: #d1c8af; color: var(--color-black); }
+    .badge-icon-option.selected { background: var(--color-leather); color: var(--color-khaki); border-color: var(--color-leather); }
+
+    /* Blocos de seção (Localização / Características) */
+    .section-block { border: 1px solid var(--border-color); border-radius: 14px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+    .cep-manual-link { display: inline-block; margin: 6px 0 0.5rem; font-size: 0.8rem; color: var(--color-leather); text-decoration: underline; cursor: pointer; }
+    .help-tip { font-size: 0.9rem; color: var(--color-taupe); cursor: help; vertical-align: middle; margin-left: 4px; }
+
+    /* Características (checkbox simples) */
+    .feature-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px 16px; }
+    .feature-check-row { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer; padding: 4px 0; }
+    .feature-check-row input { width: auto; accent-color: var(--color-leather); }
+    .feature-group { margin-bottom: 1.25rem; }
+    .feature-group:last-child { margin-bottom: 0; }
+    .feature-group-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--color-taupe); margin-bottom: 0.6rem; }
+    .feature-add-row { display: flex; gap: 8px; margin-top: 0.75rem; }
+    .feature-add-row input { flex: 1; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--input-text); font-family: var(--font-main); font-size: 0.85rem; }
+    .feature-add-btn { display: flex; align-items: center; gap: 4px; border: 1px solid var(--color-leather); color: var(--color-leather); background: transparent; border-radius: 8px; padding: 0 12px; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+    .feature-add-btn:hover { background: var(--color-leather); color: var(--color-pearl); }
+    .feature-add-row-sm input, .feature-add-row-sm button { padding: 6px 10px; font-size: 0.8rem; }
+
+    /* Índice de qualidade do anúncio */
+    .quality-panel { border: 1px solid var(--border-color); border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; background: var(--input-bg); }
+    .quality-header { display: flex; flex-direction: column; gap: 8px; }
+    .quality-score-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .quality-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--color-taupe); }
+    .quality-score-value { font-size: 1.2rem; font-weight: 700; }
+    .quality-bar-track { height: 8px; border-radius: 999px; background: var(--border-color); overflow: hidden; }
+    .quality-bar-fill { height: 100%; background: var(--color-leather); width: 0%; transition: width 0.3s ease; border-radius: 999px; }
+    .quality-panel-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; }
+    .quality-toggle-btn { background: none; border: none; color: var(--color-leather); font-size: 0.8rem; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0; }
+    .quality-hide-btn { background: none; border: none; color: var(--color-taupe); cursor: pointer; font-size: 1.1rem; padding: 0; display: flex; }
+    .quality-details { list-style: none; display: none; flex-direction: column; gap: 6px; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color); }
+    .quality-details.open { display: flex; }
+    .quality-details li { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+    .quality-details li.ok iconify-icon { color: #27ae60; }
+    .quality-details li.missing iconify-icon { color: var(--color-taupe); }
+    .quality-show-btn {
+      display: none; align-items: center; justify-content: center; gap: 8px; background: none;
+      border: 1px dashed var(--border-color); border-radius: 10px; padding: 10px; width: 100%;
+      margin-bottom: 1.5rem; cursor: pointer; color: var(--color-taupe); font-size: 0.85rem;
+    }
   </style>
   <script>
     const savedTheme = localStorage.getItem('admin_theme') || 'light';
@@ -140,11 +339,85 @@
     </div>
   </dialog>
 
+  <!-- DIALOG DE CONFIRMAÇÃO GENÉRICO -->
+  <dialog id="generic-confirm-dialog" class="custom-dialog">
+    <h3 id="generic-confirm-title">Confirmar</h3>
+    <p id="generic-confirm-msg"></p>
+    <div class="dialog-actions">
+      <button class="btn btn-secondary" id="generic-confirm-cancel">Cancelar</button>
+      <button class="btn btn-danger" id="generic-confirm-ok">Remover</button>
+    </div>
+  </dialog>
+
+  <!-- DIALOG DE DETALHES DE PREÇO -->
+  <dialog id="preco-dialog" class="custom-dialog" style="max-width: 600px; width: 90vw; padding: 0;">
+    <div style="padding: 1.5rem 2rem 1rem;">
+      <h3 style="margin: 0; font-family: var(--font-main); font-size: 1.2rem;">Detalhes de Preço</h3>
+    </div>
+    
+    <div style="padding: 0 2rem 1.5rem;">
+      <div class="form-group" id="group-valor-venda" style="margin-bottom: 1.25rem;">
+        <label style="font-size: 0.8rem; font-weight: 700; color: #888; text-transform: uppercase;">VALOR DA VENDA</label>
+        <input type="text" id="f-valor-venda" placeholder="R$ 0" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; color: var(--input-text); background: var(--input-bg);">
+      </div>
+
+      <div class="form-group" id="group-valor-aluguel" style="margin-bottom: 1.25rem;">
+        <label style="font-size: 0.8rem; font-weight: 700; color: #888; text-transform: uppercase;">VALOR DO ALUGUEL</label>
+        <input type="text" id="f-valor-aluguel" placeholder="R$ 0" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; color: var(--input-text); background: var(--input-bg);">
+      </div>
+
+      <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 1.25rem;">
+        <div>
+          <label style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: #888; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 12px;">
+            CONDOMÍNIO / MÊS
+          </label>
+          <div class="toggle-track" data-group="condominio" style="margin-bottom: 12px; width: fit-content;">
+            <span class="toggle-pill" id="pill-condominio"></span>
+            <div class="toggle-labels" style="padding: 2px;">
+              <button type="button" class="toggle-option" data-group="condominio" data-value="false" onclick="setPrecoToggle('condominio','false')">NÃO ISENTO</button>
+              <button type="button" class="toggle-option" data-group="condominio" data-value="true" onclick="setPrecoToggle('condominio','true')">ISENTO</button>
+            </div>
+          </div>
+          <input type="text" id="f-valor-condominio" placeholder="R$ 0" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; color: var(--input-text); background: var(--input-bg);">
+        </div>
+
+        <div>
+          <label style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: #888; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 12px;">
+            IPTU
+          </label>
+          <div class="toggle-track" data-group="iptu" style="margin-bottom: 12px; width: fit-content;">
+            <span class="toggle-pill" id="pill-iptu"></span>
+            <div class="toggle-labels" style="padding: 2px;">
+              <button type="button" class="toggle-option" data-group="iptu" data-value="false" onclick="setPrecoToggle('iptu','false')">NÃO ISENTO</button>
+              <button type="button" class="toggle-option" data-group="iptu" data-value="true" onclick="setPrecoToggle('iptu','true')">ISENTO</button>
+            </div>
+          </div>
+          <input type="text" id="f-valor-iptu" placeholder="R$ 0" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; color: var(--input-text); background: var(--input-bg);">
+        </div>
+      </div>
+
+      <div class="form-group" id="group-periodo-iptu" style="margin-bottom: 0;">
+        <label style="font-size: 0.8rem; font-weight: 700; color: #888; text-transform: uppercase;">VALOR REFERENTE AO PERÍODO</label>
+        <div class="toggle-track" data-group="periodo" style="margin-top: 8px; width: fit-content;">
+          <span class="toggle-pill" id="pill-periodo"></span>
+          <div class="toggle-labels" style="padding: 2px;">
+            <button type="button" class="toggle-option" data-group="periodo" data-value="Anual" onclick="setPrecoToggle('periodo','Anual')">ANUAL</button>
+            <button type="button" class="toggle-option" data-group="periodo" data-value="Mensal" onclick="setPrecoToggle('periodo','Mensal')">MENSAL</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div style="display: flex; justify-content: flex-end; gap: 12px; padding: 1.25rem 2rem; border-top: 1px solid var(--border-color);">
+      <button type="button" class="btn-pill btn-pill-primary" onclick="closePrecoDialog()">Salvar</button>
+    </div>
+  </dialog>
+
   <div class="container">
     <div class="header-actions">
       <h1>JM Imóveis Admin</h1>
       <div style="display: flex; gap: 10px; align-items: center;">
-        <button class="btn btn-secondary" onclick="toggleTheme()" title="Alternar Tema" style="padding: 10px; border-radius: 4px; display: flex; align-items: center; justify-content: center;"><iconify-icon id="theme-icon" icon="lucide:sun" style="font-size: 1.2rem;"></iconify-icon></button>
+        <button class="btn btn-secondary btn-icon-square" onclick="toggleTheme()" title="Alternar Tema"><iconify-icon id="theme-icon" icon="lucide:sun" style="font-size: 1.2rem;"></iconify-icon></button>
         <button class="btn btn-secondary" onclick="showConfig()">Configurações</button>
         <button class="btn btn-success" onclick="saveToGithub()" id="btn-sync">Sincronizar <iconify-icon icon="mdi:cloud-upload"></iconify-icon></button>
       </div>
@@ -156,6 +429,8 @@
     <div id="config-panel">
       <h2>Configurações do GitHub</h2>
       <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--color-taupe);">Para salvar os dados automaticamente, insira os dados do seu repositório e o Personal Access Token.</p>
+
+
       <div class="form-group">
         <label>Proprietário do Repositório (Ex: seu-usuario)</label>
         <input type="text" id="cfg-owner" placeholder="Ex: joaomaria">
@@ -174,6 +449,13 @@
 
     <!-- PAINEL DE LISTAGEM -->
     <div id="list-panel" class="active-panel">
+      <div id="pending-panel" style="display: none; margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2>Cadastros pendentes</h2>
+        </div>
+        <div id="pending-list"></div>
+      </div>
+
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
         <h2>Imóveis Cadastrados</h2>
         <button class="btn btn-primary" onclick="openForm()">+ Novo Imóvel</button>
@@ -181,54 +463,140 @@
       <div id="imoveis-list"></div>
     </div>
 
-    <!-- PAINEL DE FORMULÁRIO -->
-    <div id="form-panel">
+  </div>
+
+  <!-- DIALOG DEDICADO DE CADASTRO/EDIÇÃO DE IMÓVEL -->
+  <dialog id="property-dialog" class="custom-dialog property-dialog">
+    <div class="dialog-header">
       <h2 id="form-title">Cadastrar Imóvel</h2>
+      <button type="button" class="icon-btn dialog-close" onclick="closePropertyDialog()" aria-label="Fechar"><iconify-icon icon="mdi:close"></iconify-icon></button>
+    </div>
+
+    <div class="dialog-body">
       <input type="hidden" id="imovel-id">
-      
+
+      <!-- ÍNDICE DE QUALIDADE DO ANÚNCIO -->
+      <div class="quality-panel" id="quality-panel">
+        <div class="quality-header">
+          <div class="quality-score-row">
+            <span class="quality-label">Qualidade do anúncio</span>
+            <span class="quality-score-value" id="quality-score-value">0/10</span>
+          </div>
+          <div class="quality-bar-track"><div class="quality-bar-fill" id="quality-bar-fill"></div></div>
+          <div class="quality-panel-actions">
+            <button type="button" class="quality-toggle-btn" id="quality-toggle-btn" onclick="toggleQualityDetails()">Ver detalhes</button>
+            <button type="button" class="quality-hide-btn" onclick="hideQualityPanel()" title="Ocultar análise" aria-label="Ocultar análise"><iconify-icon icon="mdi:eye-off-outline"></iconify-icon></button>
+          </div>
+        </div>
+        <ul class="quality-details" id="quality-details"></ul>
+      </div>
+      <button type="button" class="quality-show-btn" id="quality-show-btn" onclick="showQualityPanel()">
+        <iconify-icon icon="mdi:chart-donut"></iconify-icon> Mostrar qualidade do anúncio
+      </button>
+
+      <!-- MENU DE TOGGLES: CATEGORIA E FINALIDADE DO IMÓVEL -->
+      <div class="toggle-menu">
+        <div class="toggle-track" data-group="categoria">
+          <span class="toggle-pill" id="pill-categoria"></span>
+          <div class="toggle-labels">
+            <button type="button" class="toggle-option" data-group="categoria" data-value="Residencial" onclick="setToggle('categoria','Residencial')">Residencial</button>
+            <button type="button" class="toggle-option" data-group="categoria" data-value="Comercial" onclick="setToggle('categoria','Comercial')">Comercial</button>
+          </div>
+        </div>
+        <div class="toggle-track" data-group="finalidade">
+          <span class="toggle-pill" id="pill-finalidade"></span>
+          <div class="toggle-labels">
+            <button type="button" class="toggle-option" data-group="finalidade" data-value="Compra" onclick="setToggle('finalidade','Compra')">Venda</button>
+            <button type="button" class="toggle-option" data-group="finalidade" data-value="Aluguel" onclick="setToggle('finalidade','Aluguel')">Aluguel</button>
+            <button type="button" class="toggle-option" data-group="finalidade" data-value="Venda e Aluguel" onclick="setToggle('finalidade','Venda e Aluguel')">Venda e Aluguel</button>
+          </div>
+        </div>
+      </div>
+
       <div class="form-row">
         <div class="form-group">
           <label>Nome do Imóvel</label>
-          <input type="text" id="f-nome" required>
+          <input type="text" id="f-nome" required oninput="recalcQualidade()">
         </div>
         <div class="form-group">
           <label>Construtora</label>
           <input type="text" id="f-construtora">
         </div>
       </div>
-      
-      <div class="form-row">
-        <div class="form-group">
-          <label>Localização</label>
-          <input type="text" id="f-localizacao" required>
-        </div>
-        <div class="form-group">
-          <label>Preço (Ex: R$ 5.990.000,00)</label>
-          <input type="text" id="f-preco" required>
+
+      <div class="form-group">
+        <label>Preço</label>
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="f-preco" required oninput="recalcQualidade()" style="flex: 1;">
+          <button type="button" class="btn-detalhes" onclick="openPrecoDialog()">Detalhes</button>
         </div>
       </div>
-      
-      <div class="form-row">
+
+      <div class="form-group">
+        <label>Tipo do Imóvel</label>
+        <div class="custom-select" id="tipo-select">
+          <input type="hidden" id="f-tipo" value="Apartamento">
+          <div class="custom-select-input-wrap">
+            <input type="text" id="f-tipo-input" class="custom-select-trigger" autocomplete="off"
+              value="Apartamento" placeholder="Digite ou selecione..."
+              oninput="filterTipoOptions(this.value)" onfocus="handleTipoFocus(this)" onkeydown="handleTipoKeydown(event)">
+            <iconify-icon icon="mdi:chevron-down" class="custom-select-chevron"></iconify-icon>
+          </div>
+          <div class="custom-select-panel" id="tipo-panel">
+            <div class="custom-select-panel-scroll">
+              <div class="custom-select-option selected" data-value="Apartamento" onclick="setTipo('Apartamento')">Apartamento</div>
+              <div class="custom-select-option" data-value="Casa" onclick="setTipo('Casa')">Casa</div>
+              <div class="custom-select-option" data-value="Casa de condomínio" onclick="setTipo('Casa de condomínio')">Casa de condomínio</div>
+              <div class="custom-select-option" data-value="Casa de vila" onclick="setTipo('Casa de vila')">Casa de vila</div>
+              <div class="custom-select-option" data-value="Cobertura" onclick="setTipo('Cobertura')">Cobertura</div>
+              <div class="custom-select-option" data-value="Fazenda/Sítio/Chácara" onclick="setTipo('Fazenda/Sítio/Chácara')">Fazenda/Sítio/Chácara</div>
+              <div class="custom-select-option" data-value="Flat" onclick="setTipo('Flat')">Flat</div>
+              <div class="custom-select-option" data-value="Kitnet/Conjugado" onclick="setTipo('Kitnet/Conjugado')">Kitnet/Conjugado</div>
+              <div class="custom-select-option" data-value="Loft" onclick="setTipo('Loft')">Loft</div>
+              <div class="custom-select-option" data-value="Lote/Terreno" onclick="setTipo('Lote/Terreno')">Lote/Terreno</div>
+              <div class="custom-select-option" data-value="Prédio/Edifício inteiro" onclick="setTipo('Prédio/Edifício inteiro')">Prédio/Edifício inteiro</div>
+              <div class="custom-select-option" data-value="Sala Comercial" onclick="setTipo('Sala Comercial')">Sala Comercial</div>
+              <div class="custom-select-option" data-value="Studio" onclick="setTipo('Studio')">Studio</div>
+              <div class="custom-select-empty" id="tipo-empty">Nenhuma opção encontrada — o texto digitado será usado.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOCALIZAÇÃO -->
+      <div class="section-block">
+        <h3 class="section-title">Localização do imóvel</h3>
         <div class="form-group">
-          <label>Tipo</label>
-          <select id="f-tipo">
-            <option value="Apartamento">Apartamento</option>
-            <option value="Casa">Casa</option>
-            <option value="Cobertura">Cobertura</option>
-            <option value="Sala Comercial">Sala Comercial</option>
-          </select>
+          <label>CEP</label>
+          <input type="text" id="f-cep" maxlength="9" oninput="handleCepInput(this)" onblur="lookupCep()">
+          <a class="cep-manual-link" onclick="focusManualLocation()">Não sabe o CEP? Clique aqui</a>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cidade</label>
+            <input type="text" id="f-cidade" oninput="recalcQualidade()">
+          </div>
+          <div class="form-group">
+            <label>UF</label>
+            <input type="text" id="f-uf" maxlength="2" style="text-transform: uppercase;">
+          </div>
         </div>
         <div class="form-group">
-          <label>Finalidade</label>
-          <div style="display: flex; gap: 10px;">
-            <label class="radio-btn">
-              <input type="radio" name="f-finalidade" value="Compra" checked>
-              <span>Compra</span>
-            </label>
-            <label class="radio-btn">
-              <input type="radio" name="f-finalidade" value="Aluguel">
-              <span>Aluguel</span>
-            </label>
+          <label>Bairro</label>
+          <input type="text" id="f-bairro" oninput="recalcQualidade()">
+        </div>
+        <div class="form-group">
+          <label>Endereço</label>
+          <input type="text" id="f-endereco" oninput="recalcQualidade()">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Número</label>
+            <input type="text" id="f-numero">
+          </div>
+          <div class="form-group">
+            <label>Complemento <iconify-icon icon="mdi:help-circle-outline" class="help-tip" title="Apartamento, bloco, casa, etc."></iconify-icon></label>
+            <input type="text" id="f-complemento">
           </div>
         </div>
       </div>
@@ -243,58 +611,104 @@
           <input type="number" id="f-suites" value="0">
         </div>
         <div class="form-group">
+          <label>Banheiros</label>
+          <input type="number" id="f-banheiros" value="0">
+        </div>
+        <div class="form-group">
           <label>Vagas</label>
           <input type="number" id="f-vagas" value="0">
         </div>
         <div class="form-group">
-          <label>Área</label>
+          <label>Área Útil</label>
           <div class="input-with-suffix">
-            <input type="number" id="f-area" placeholder="Ex: 170">
+            <input type="number" id="f-area-util" oninput="recalcQualidade()">
+            <span class="suffix">m²</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Área Total</label>
+          <div class="input-with-suffix">
+            <input type="number" id="f-area-total" oninput="recalcQualidade()">
             <span class="suffix">m²</span>
           </div>
         </div>
       </div>
 
       <div class="form-group">
-        <label>Imagens (Anexe do seu computador)</label>
-        <input type="file" id="f-imagens" multiple accept="image/*">
-        <div id="image-preview-container" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;"></div>
+        <label>Fotos do imóvel</label>
+        <div class="dropzone" id="dropzone">
+          <iconify-icon icon="mdi:cloud-upload-outline"></iconify-icon>
+          <p>Arraste as fotos aqui ou clique para selecionar</p>
+          <span>JPG ou PNG</span>
+          <input type="file" id="f-imagens" multiple accept="image/*">
+        </div>
+        <div id="image-preview-container" class="image-preview-grid"></div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label>Badges (Selecione um ou mais)</label>
-          <select id="f-badges" multiple style="height: 100px;">
-            <option value="Exclusividade">Exclusividade</option>
-            <option value="Alto Padrão">Alto Padrão</option>
-            <option value="Locação">Locação</option>
-            <option value="Oportunidade">Oportunidade</option>
-            <option value="Comercial">Comercial</option>
-            <option value="Mobiliado">Mobiliado</option>
-            <option value="Lançamento">Lançamento</option>
-            <option value="Frente Mar">Frente Mar</option>
-            <option value="Decorado">Decorado</option>
-          </select>
-          <small style="color: var(--color-taupe); margin-top: 5px; display: block;">Segure CTRL (ou CMD) para selecionar vários.</small>
-        </div>
-        <div class="form-group">
-          <label>Link do YouTube (Opcional)</label>
-          <input type="text" id="f-youtube" placeholder="https://www.youtube.com/watch?...">
-        </div>
+      <div class="form-group">
+        <label>Badges</label>
+        <div class="chip-grid" id="badges-grid"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Link do YouTube</label>
+        <input type="text" id="f-youtube" placeholder="https://www.youtube.com/watch?...">
       </div>
 
       <div class="form-group">
         <label>Descrição</label>
-        <textarea id="f-descricao" rows="4"></textarea>
+        <textarea id="f-descricao" rows="4" oninput="recalcQualidade()"></textarea>
       </div>
 
-      <div style="display: flex; gap: 10px; margin-top: 2rem;">
-        <button class="btn btn-primary" onclick="saveProperty()">Salvar na Lista</button>
-        <button class="btn btn-secondary" onclick="showList()">Cancelar</button>
+      <!-- CARACTERÍSTICAS DO IMÓVEL -->
+      <div class="section-block">
+        <h3 class="section-title">Características do imóvel</h3>
+        <div class="feature-list" id="feature-list-imovel"></div>
+        <div class="feature-add-row">
+          <input type="text" id="feature-imovel-input" placeholder="Nova característica" onkeydown="handleFeatureImovelKeydown(event)">
+          <button type="button" class="feature-add-btn" onclick="addFeatureImovel()"><iconify-icon icon="mdi:plus"></iconify-icon> Adicionar</button>
+        </div>
+      </div>
+
+      <!-- CARACTERÍSTICAS DO CONDOMÍNIO -->
+      <div class="section-block">
+        <h3 class="section-title">Características do condomínio</h3>
+        <div id="feature-groups-condominio"></div>
+        <div class="feature-add-row">
+          <input type="text" id="categoria-condominio-input" placeholder="Nome da nova categoria">
+          <button type="button" class="feature-add-btn" onclick="addCategoriaCondominio()"><iconify-icon icon="mdi:folder-plus-outline"></iconify-icon> Nova categoria</button>
+        </div>
       </div>
     </div>
 
-  </div>
+    <div class="dialog-footer">
+      <button type="button" class="btn-pill btn-pill-secondary" onclick="closePropertyDialog()">Cancelar</button>
+      <button type="button" class="btn-pill btn-pill-primary" onclick="saveProperty()">Salvar</button>
+    </div>
+  </dialog>
+
+  <dialog id="badge-dialog" class="custom-dialog" style="max-width: 440px; width: 90vw; padding: 0;">
+    <div style="padding: 1.75rem 2rem 1rem; display: flex; align-items: center; justify-content: space-between;">
+      <h3 style="margin: 0; font-family: var(--font-main); font-size: 1.1rem;">Novo Badge Personalizado</h3>
+      <button type="button" onclick="closeBadgeDialog()" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--color-taupe); display: flex; align-items: center;">
+        <iconify-icon icon="mdi:close"></iconify-icon>
+      </button>
+    </div>
+    <div style="padding: 0 2rem 1.5rem;">
+      <div class="form-group">
+        <label>Nome do Badge</label>
+        <input type="text" id="badge-dialog-name" placeholder="Ex: Vista para o Lago">
+      </div>
+      <div class="form-group">
+        <label>Selecione um Ícone</label>
+        <div class="badge-icons-grid" id="badge-icons-container"></div>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: flex-end; gap: 12px; padding: 1.25rem 2rem; border-top: 1px solid var(--border-color); border-radius: 0 0 20px 20px;">
+      <button type="button" class="btn-pill btn-pill-secondary" onclick="closeBadgeDialog()">Cancelar</button>
+      <button type="button" class="btn-pill btn-pill-primary" onclick="addCustomBadgeFromDialog()">Adicionar</button>
+    </div>
+  </dialog>
 
   <script>
     let imoveisData = [];
@@ -303,11 +717,126 @@
       repo: localStorage.getItem('gh_repo') || '',
       token: localStorage.getItem('gh_token') || ''
     };
+    let dialogCategoria = 'Residencial'; // 'Residencial' | 'Comercial'
+    let dialogFinalidade = 'Compra';     // 'Compra' | 'Aluguel' | 'Venda e Aluguel'
+
+    // Badges: lista padrão + personalizados (persistidos no navegador)
+    const DEFAULT_BADGES = [
+      { nome: 'Exclusividade', icon: 'lucide:star' },
+      { nome: 'Alto Padrão', icon: 'lucide:crown' },
+      { nome: 'Locação', icon: 'lucide:key-round' },
+      { nome: 'Oportunidade', icon: 'lucide:trending-up' },
+      { nome: 'Comercial', icon: 'lucide:building-2' },
+      { nome: 'Mobiliado', icon: 'lucide:sofa' },
+      { nome: 'Lançamento', icon: 'lucide:rocket' },
+      { nome: 'Frente Mar', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 80 80"><path d="M0 0h80v80H0z" fill="none" /><path fill="currentColor" d="m13 19.5l2.121 2.122zm-.515.515l-2.121-2.121zM14.5 18l2.121 2.122zm-1 1l-2.121-2.121zM4 20.53a3 3 0 1 0 0 6zm15.515-.515l2.121-2.122zM37 19.5l2.121 2.122zm-.515.515l-2.121-2.122zM38.5 18l2.121 2.122zm-1 1l-2.121-2.121zm6.015 1.015l-2.122 2.121zM61 19.5l2.121 2.122zm-.515.515l-2.121-2.122zM62.5 18l2.121 2.122zm-1 1l-2.121-2.121zm6.015 1.015l2.121-2.122zM76 26.53a3 3 0 0 0 0-6zM65 17.5l2.121-2.121zm-24 0l2.121-2.121zm-30.121-.121l-.515.515l4.243 4.242l.514-.514zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zM4 26.529c3.834 0 7.678-1.465 10.607-4.393l-4.243-4.242A8.96 8.96 0 0 1 4 20.53zm17.636-8.635l-2.515-2.515l-4.242 4.243l2.514 2.514zm13.243-.515l-.515.514l4.243 4.243l.514-.514zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.257c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.242a9 9 0 0 1-12.728 0zm28.243-4.242l-2.515-2.515l-4.242 4.243l2.514 2.514zm13.243-.515l-.515.514l4.243 4.243l.514-.514zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.257c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.242a9 9 0 0 1-12.728 0zm28.243-4.242l-2.515-2.515l-4.242 4.243l2.514 2.514zm-4.243 4.242A14.96 14.96 0 0 0 76 26.53v-6a8.96 8.96 0 0 1-6.364-2.637zm-.272-2.514a1.586 1.586 0 0 1-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zm-24 0a1.586 1.586 0 0 1-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zm-24 0a1.586 1.586 0 0 1-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zM13 33.229l2.121 2.121zm-.515.514l-2.121-2.12zM14.5 31.73l2.121 2.121zm-1 1l-2.121-2.122zM4 34.259a3 3 0 0 0 0 6zm15.515-.516l2.121-2.12zM37 33.23l2.121 2.121zm-.515.514l-2.121-2.12zM38.5 31.73l2.121 2.121zm-1 1l-2.121-2.122zm6.015 1.014l-2.122 2.122zM61 33.23l2.121 2.121zm-.515.514l-2.121-2.12zM62.5 31.73l2.121 2.121zm-1 1l-2.121-2.122zm6.015 1.014l2.121-2.12zM76 40.258a3 3 0 1 0 0-6zm-11-9.03l2.121-2.12zm-24 0l2.121-2.12zm-30.121-.12l-.515.514l4.243 4.243l.514-.515zm2-2l-.5.5l4.242 4.242l.5-.5zm-.5.5l-.5.5l4.242 4.242l.5-.5zm-.5.5l-.5.5l4.242 4.242l.5-.5zm-.5.5l-.5.5l4.242 4.242l.5-.5zM4 40.257c3.834 0 7.678-1.465 10.607-4.393l-4.243-4.243A8.96 8.96 0 0 1 4 34.258zm17.636-8.636l-2.515-2.515l-4.242 4.243l2.514 2.515zm13.243-.515l-.515.515l4.243 4.243l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.258c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.243a9 9 0 0 1-12.728 0zm28.243-4.243l-2.515-2.515l-4.242 4.243l2.514 2.515zm13.243-.515l-.515.515l4.243 4.243l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.258c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.243a9 9 0 0 1-12.728 0zm28.243-4.243l-2.515-2.515l-4.242 4.243l2.514 2.515zm-4.243 4.243A14.96 14.96 0 0 0 76 40.258v-6a8.96 8.96 0 0 1-6.364-2.636zm-.272-2.515c-.619.62-1.623.62-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zm-24 0c-.619.62-1.623.62-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zm-24 0c-.619.62-1.623.62-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zM13 46.957l2.121 2.121zm-.515.515l-2.121-2.121zm2.015-2.015l2.121 2.121zm-1 1l-2.121-2.121zM4 47.987a3 3 0 0 0 0 6zm15.515-.515l2.121-2.121zM37 46.957l2.121 2.121zm-.515.515l-2.121-2.121zm2.015-2.015l2.121 2.121zm-1 1l-2.121-2.121zm6.015 1.015l-2.122 2.121zM61 46.957l2.121 2.121zm-.515.515l-2.121-2.121zm2.015-2.015l2.121 2.121zm-1 1l-2.121-2.121zm6.015 1.015l2.121-2.121zM76 53.987a3 3 0 1 0 0-6zm-11-9.03l2.121-2.121zm-24 0l2.121-2.121zm-30.121-.121l-.515.515l4.243 4.242l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zM4 53.986c3.834 0 7.678-1.464 10.607-4.393l-4.243-4.242A8.96 8.96 0 0 1 4 47.987zm17.636-8.635l-2.515-2.515l-4.242 4.243l2.514 2.514zm13.243-.515l-.515.515l4.243 4.242l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.257c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.242a9 9 0 0 1-12.728 0zm28.243-4.242l-2.515-2.515l-4.242 4.243l2.514 2.514zm13.243-.515l-.515.515l4.243 4.242l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.257c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.242a9 9 0 0 1-12.728 0zm28.243-4.242l-2.515-2.515l-4.242 4.243l2.514 2.514zm-4.243 4.242A14.96 14.96 0 0 0 76 53.987v-6a8.96 8.96 0 0 1-6.364-2.636zm-.272-2.515c-.619.62-1.623.62-2.242 0l4.242-4.242a4.414 4.414 0 0 0-6.242 0zm-24 0c-.619.62-1.623.62-2.242 0l4.242-4.242a4.414 4.414 0 0 0-6.242 0zm-24 0c-.619.62-1.623.62-2.242 0l4.242-4.242a4.414 4.414 0 0 0-6.242 0zM13 60.686l2.121 2.121zm-.515.514l-2.121-2.12zm2.015-2.014l2.121 2.121zm-1 1l-2.121-2.122zM4 61.716a3 3 0 0 0 0 6zm15.515-.516l2.121-2.12zM37 60.686l2.121 2.121zm-.515.514l-2.121-2.12zm2.015-2.014l2.121 2.121zm-1 1l-2.121-2.122zm6.015 1.014l-2.122 2.122zM61 60.686l2.121 2.121zm-.515.514l-2.121-2.12zm2.015-2.014l2.121 2.121zm-1 1l-2.121-2.122zm6.015 1.014l2.121-2.12zM76 67.715a3 3 0 1 0 0-6zm-11-9.03l2.121-2.12zm-24 0l2.121-2.12zm-30.121-.12l-.515.514l4.243 4.243l.514-.515zm2-2l-.5.5l4.242 4.242l.5-.5zm-.5.5l-.5.5l4.242 4.242l.5-.5zm-.5.5l-.5.5l4.242 4.242l.5-.5zm-.5.5l-.5.5l4.242 4.242l.5-.5zM4 67.714c3.834 0 7.678-1.465 10.607-4.393l-4.243-4.243A8.96 8.96 0 0 1 4 61.715zm17.636-8.636l-2.515-2.515l-4.242 4.243l2.514 2.515zm13.243-.515l-.515.515l4.243 4.243l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.258c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.243a9 9 0 0 1-12.728 0zm28.243-4.243l-2.515-2.515l-4.242 4.243l2.514 2.515zm13.243-.515l-.515.515l4.243 4.243l.514-.515zm2-2l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-.5.5l-.5.5l4.242 4.243l.5-.5zm-17.986 5.258c5.858 5.858 15.356 5.858 21.214 0l-4.243-4.243a9 9 0 0 1-12.728 0zm28.243-4.243l-2.515-2.515l-4.242 4.243l2.514 2.515zm-4.243 4.243A14.96 14.96 0 0 0 76 67.715v-6a8.96 8.96 0 0 1-6.364-2.636zm-.272-2.515c-.619.62-1.623.62-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zm-24 0c-.619.62-1.623.62-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0zm-24 0c-.619.62-1.623.62-2.242 0l4.242-4.243a4.414 4.414 0 0 0-6.242 0z" /></svg>' },
+      { nome: 'Decorado', icon: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14"><path d="M0 0h14v14H0z" fill="none" /><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 13.5h11a1 1 0 0 0 1-1v-11a1 1 0 0 0-1-1h-11a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1" /><path d="M10 6.5a3 3 0 1 1-6 0V4.31a.5.5 0 0 1 .72-.45L7 5l2.28-1.14a.5.5 0 0 1 .72.45zm-3 3v4m0 0L9.5 11M7 13.5L4.5 11" /></g></svg>' }
+    ];
+    let customBadges = JSON.parse(localStorage.getItem('custom_badges') || '[]');
+    let selectedBadges = [];
+
+    // Características do imóvel: lista padrão + personalizadas
+    const DEFAULT_FEATURES_IMOVEL = ['Aceita animais', 'Ar-condicionado', 'Closet', 'Cozinha americana', 'Lareira', 'Mobiliado', 'Varanda gourmet'];
+    let customFeaturesImovel = JSON.parse(localStorage.getItem('custom_features_imovel') || '[]');
+    let selectedFeaturesImovel = [];
+
+    // Características do condomínio: categorias padrão + personalizadas (tudo junto, persistido)
+    const DEFAULT_CONDOMINIO_CATEGORIAS = {
+      'Lazer e Esporte': ['Academia', 'Churrasqueira', 'Cinema', 'Espaço gourmet', 'Jardim', 'Piscina', 'Playground', 'Quadra de squash', 'Quadra de tênis', 'Quadra poliesportiva', 'Salão de festas', 'Salão de jogos'],
+      'Comodidades e Serviços': ['Acesso para deficientes', 'Bicicletário', 'Coworking', 'Elevador', 'Lavanderia', 'Sauna', 'Spa'],
+      'Segurança': ['Condomínio fechado', 'Portão eletrônico', 'Portaria 24h']
+    };
+    let condominioCategorias = JSON.parse(localStorage.getItem('condominio_categorias') || 'null') || JSON.parse(JSON.stringify(DEFAULT_CONDOMINIO_CATEGORIAS));
+    let selectedFeaturesCondominio = [];
 
     // Inicializa a lista a partir do window.imoveis (carregado do data.js)
     if (window.imoveis) {
       imoveisData = JSON.parse(JSON.stringify(window.imoveis)); // Clone profundo
       renderList();
+    }
+
+    // Cadastros parciais enviados pelo site (busca.html) via localStorage
+    let pendingImoveis = JSON.parse(localStorage.getItem('pending_imoveis') || '[]');
+    let currentPendingId = null;
+    renderPendingList();
+
+    function renderPendingList() {
+      const panel = document.getElementById('pending-panel');
+      const container = document.getElementById('pending-list');
+      container.innerHTML = '';
+
+      if (pendingImoveis.length === 0) {
+        panel.style.display = 'none';
+        return;
+      }
+      panel.style.display = 'block';
+
+      pendingImoveis.forEach((p) => {
+        const item = document.createElement('div');
+        item.className = 'pending-item';
+        const metaPartes = [p.tipo, p.finalidade === 'Aluguel' ? 'Aluguel' : 'Venda', [p.bairro, p.cidade].filter(Boolean).join(', '), p.preco, p.quartosVagas].filter(Boolean);
+        item.innerHTML = `
+          <div class="pending-item-top">
+            <div>
+              <span class="pending-badge">Pendente</span>
+              <div class="pending-item-title">${p.proprietarioNome || 'Sem nome'} · ${p.proprietarioContato || ''}</div>
+              <div class="pending-item-meta">${metaPartes.join(' · ')}</div>
+              ${p.descricao ? `<div class="pending-item-desc">${p.descricao}</div>` : ''}
+            </div>
+            <div class="pending-item-actions">
+              <button class="btn btn-primary" onclick="completePending('${p.pendingId}')">Completar cadastro</button>
+              <button class="icon-btn" onclick="discardPending('${p.pendingId}')" title="Descartar"><iconify-icon icon="mdi:delete" style="color: #e74c3c;"></iconify-icon></button>
+            </div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function discardPending(pendingId) {
+      pendingImoveis = pendingImoveis.filter(p => p.pendingId !== pendingId);
+      localStorage.setItem('pending_imoveis', JSON.stringify(pendingImoveis));
+      renderPendingList();
+    }
+
+    function completePending(pendingId) {
+      const pending = pendingImoveis.find(p => p.pendingId === pendingId);
+      if (!pending) return;
+
+      openForm();
+      currentPendingId = pendingId;
+
+      setTipo(pending.tipo || 'Apartamento');
+      setToggle('finalidade', pending.finalidade === 'Aluguel' ? 'Aluguel' : 'Compra');
+      document.getElementById('f-cidade').value = pending.cidade || '';
+      document.getElementById('f-bairro').value = pending.bairro || '';
+      document.getElementById('f-preco').value = pending.preco || '';
+
+      const contatoLinha = `Cadastro enviado pelo site — Proprietário: ${pending.proprietarioNome || ''} | Contato: ${pending.proprietarioContato || ''}${pending.quartosVagas ? ' | ' + pending.quartosVagas : ''}`;
+      document.getElementById('f-descricao').value = [contatoLinha, pending.descricao || ''].filter(Boolean).join('\n\n');
+
+      recalcQualidade();
+    }
+
+    function customConfirm(msg, title = 'Confirmar') {
+      return new Promise(resolve => {
+        const dialog = document.getElementById('generic-confirm-dialog');
+        document.getElementById('generic-confirm-title').innerText = title;
+        document.getElementById('generic-confirm-msg').innerText = msg;
+        const okBtn = document.getElementById('generic-confirm-ok');
+        const cancelBtn = document.getElementById('generic-confirm-cancel');
+        function cleanup(result) {
+          okBtn.removeEventListener('click', onOk);
+          cancelBtn.removeEventListener('click', onCancel);
+          dialog.close();
+          resolve(result);
+        }
+        function onOk() { cleanup(true); }
+        function onCancel() { cleanup(false); }
+        okBtn.addEventListener('click', onOk);
+        cancelBtn.addEventListener('click', onCancel);
+        dialog.showModal();
+      });
     }
 
     function showMsg(text, type) {
@@ -320,7 +849,6 @@
     function switchPanel(panelId) {
       document.getElementById('config-panel').classList.remove('active-panel');
       document.getElementById('list-panel').classList.remove('active-panel');
-      document.getElementById('form-panel').classList.remove('active-panel');
       document.getElementById(panelId).classList.add('active-panel');
     }
 
@@ -352,13 +880,13 @@
     function renderList() {
       const container = document.getElementById('imoveis-list');
       container.innerHTML = '';
-      
+
       if (imoveisData.length === 0) {
         container.innerHTML = '<p>Nenhum imóvel cadastrado.</p>';
         return;
       }
 
-      imoveisData.forEach((imovel, index) => {
+      imoveisData.forEach((imovel) => {
         const item = document.createElement('div');
         item.className = 'list-item';
         item.innerHTML = `
@@ -368,8 +896,8 @@
             <div class="list-item-price">${imovel.preco} - ${imovel.localizacao}</div>
           </div>
           <div class="list-item-actions">
-            <button class="icon-btn" onclick="moveUp(${index})" title="Mover para cima"><iconify-icon icon="mdi:arrow-up"></iconify-icon></button>
-            <button class="icon-btn" onclick="moveDown(${index})" title="Mover para baixo"><iconify-icon icon="mdi:arrow-down"></iconify-icon></button>
+            <button class="icon-btn" onclick="moveUp(${imovel.id})" title="Mover para cima"><iconify-icon icon="mdi:arrow-up"></iconify-icon></button>
+            <button class="icon-btn" onclick="moveDown(${imovel.id})" title="Mover para baixo"><iconify-icon icon="mdi:arrow-down"></iconify-icon></button>
             <button class="icon-btn" onclick="openForm(${imovel.id})" title="Editar"><iconify-icon icon="mdi:pencil"></iconify-icon></button>
             <button class="icon-btn" onclick="deleteProperty(${imovel.id})" title="Excluir"><iconify-icon icon="mdi:delete" style="color: #e74c3c;"></iconify-icon></button>
           </div>
@@ -378,21 +906,191 @@
       });
     }
 
-    function moveUp(index) {
-      if (index === 0) return;
-      const temp = imoveisData[index - 1];
-      imoveisData[index - 1] = imoveisData[index];
-      imoveisData[index] = temp;
+    function moveUp(id) {
+      const index = imoveisData.findIndex(i => i.id === id);
+      if (index <= 0) return;
+      [imoveisData[index - 1], imoveisData[index]] = [imoveisData[index], imoveisData[index - 1]];
       renderList();
     }
 
-    function moveDown(index) {
-      if (index === imoveisData.length - 1) return;
-      const temp = imoveisData[index + 1];
-      imoveisData[index + 1] = imoveisData[index];
-      imoveisData[index] = temp;
+    function moveDown(id) {
+      const index = imoveisData.findIndex(i => i.id === id);
+      if (index === -1 || index === imoveisData.length - 1) return;
+      [imoveisData[index + 1], imoveisData[index]] = [imoveisData[index], imoveisData[index + 1]];
       renderList();
     }
+
+    function setToggle(group, value) {
+      if (group === 'categoria') {
+        dialogCategoria = value;
+      } else {
+        dialogFinalidade = value;
+      }
+      updateToggleUI();
+    }
+
+    function updateToggleUI() {
+      document.querySelectorAll('.toggle-option[data-group="categoria"]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === dialogCategoria);
+      });
+      document.querySelectorAll('.toggle-option[data-group="finalidade"]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === dialogFinalidade);
+      });
+      movePill('categoria', dialogCategoria);
+      movePill('finalidade', dialogFinalidade);
+      updateDetalhesPrecoUI();
+    }
+
+    let dialogCondominioIsento = 'false';
+    let dialogIptuIsento = 'false';
+    let dialogPeriodoIptu = 'Anual';
+
+    function setPrecoToggle(group, value) {
+      if (group === 'condominio') dialogCondominioIsento = value;
+      if (group === 'iptu') dialogIptuIsento = value;
+      if (group === 'periodo') dialogPeriodoIptu = value;
+      updatePrecoToggleUI();
+      togglePrecoInputs();
+    }
+
+    function updatePrecoToggleUI() {
+      document.querySelectorAll('.toggle-option[data-group="condominio"]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === dialogCondominioIsento);
+      });
+      document.querySelectorAll('.toggle-option[data-group="iptu"]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === dialogIptuIsento);
+      });
+      document.querySelectorAll('.toggle-option[data-group="periodo"]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.value === dialogPeriodoIptu);
+      });
+      movePill('condominio', dialogCondominioIsento);
+      movePill('iptu', dialogIptuIsento);
+      movePill('periodo', dialogPeriodoIptu);
+    }
+
+    function openPrecoDialog() {
+      document.getElementById('preco-dialog').showModal();
+      // Necessário usar requestAnimationFrame para dar tempo ao navegador de renderizar
+      // o dialog e termos larguras válidas para os botões e fazer o offsetWidth do pill
+      requestAnimationFrame(() => updatePrecoToggleUI());
+    }
+    
+    function closePrecoDialog() {
+      document.getElementById('preco-dialog').close();
+    }
+
+
+    
+    function togglePrecoInputs() {
+      const condIsento = dialogCondominioIsento === 'true';
+      const iptuIsento = dialogIptuIsento === 'true';
+      
+      const condInput = document.getElementById('f-valor-condominio');
+      const iptuInput = document.getElementById('f-valor-iptu');
+      
+      condInput.style.display = condIsento ? 'none' : 'block';
+      iptuInput.style.display = iptuIsento ? 'none' : 'block';
+    }
+
+    function updateDetalhesPrecoUI() {
+      const groupVenda = document.getElementById('group-valor-venda');
+      const groupAluguel = document.getElementById('group-valor-aluguel');
+      
+      if (dialogFinalidade === 'Compra' || dialogFinalidade === 'Venda') {
+        groupVenda.style.display = 'block';
+        groupAluguel.style.display = 'none';
+      } else if (dialogFinalidade === 'Aluguel' || dialogFinalidade === 'Locação') {
+        groupVenda.style.display = 'none';
+        groupAluguel.style.display = 'block';
+      } else {
+        groupVenda.style.display = 'block';
+        groupAluguel.style.display = 'block';
+      }
+      togglePrecoInputs();
+    }
+
+    function movePill(group, value) {
+      const track = document.querySelector(`.toggle-track[data-group="${group}"]`);
+      const pill = document.getElementById('pill-' + group);
+      const activeBtn = track.querySelector(`.toggle-option[data-value="${value}"]`);
+
+      if (!activeBtn) return;
+      pill.style.opacity = '1';
+      pill.style.left = activeBtn.offsetLeft + 'px';
+      pill.style.width = activeBtn.offsetWidth + 'px';
+    }
+
+    function openTipoDropdown() {
+      document.getElementById('tipo-select').classList.add('open');
+    }
+
+    function closeTipoDropdown() {
+      document.getElementById('tipo-select').classList.remove('open');
+    }
+
+    function normalizeTipoText(str) {
+      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    }
+
+    function filterTipoOptions(query) {
+      openTipoDropdown();
+      const normQuery = normalizeTipoText(query);
+      let anyVisible = false;
+      document.querySelectorAll('#tipo-panel .custom-select-option').forEach(opt => {
+        const match = normalizeTipoText(opt.dataset.value).includes(normQuery);
+        opt.style.display = match ? '' : 'none';
+        if (match) anyVisible = true;
+      });
+      document.getElementById('tipo-empty').style.display = anyVisible ? 'none' : 'block';
+    }
+
+    function handleTipoFocus(input) {
+      input.select();
+      filterTipoOptions('');
+    }
+
+    function handleTipoKeydown(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        const firstVisible = Array.from(document.querySelectorAll('#tipo-panel .custom-select-option'))
+          .find(opt => opt.style.display !== 'none');
+        if (firstVisible) {
+          setTipo(firstVisible.dataset.value);
+        } else {
+          commitTipoInput();
+          closeTipoDropdown();
+        }
+        document.getElementById('f-tipo-input').blur();
+      } else if (event.key === 'Escape') {
+        commitTipoInput();
+        closeTipoDropdown();
+        document.getElementById('f-tipo-input').blur();
+      }
+    }
+
+    function commitTipoInput() {
+      document.getElementById('f-tipo').value = document.getElementById('f-tipo-input').value;
+    }
+
+    function setTipo(value) {
+      document.getElementById('f-tipo').value = value;
+      document.getElementById('f-tipo-input').value = value;
+      document.querySelectorAll('#tipo-panel .custom-select-option').forEach(opt => {
+        if (opt.dataset.value === value) opt.classList.add('selected');
+        else opt.classList.remove('selected');
+      });
+      document.getElementById('tipo-empty').style.display = 'none';
+      closeTipoDropdown();
+      recalcQualidade();
+    }
+
+    document.addEventListener('click', (e) => {
+      const tipoSelect = document.getElementById('tipo-select');
+      if (tipoSelect && !tipoSelect.contains(e.target)) {
+        commitTipoInput();
+        closeTipoDropdown();
+      }
+    });
 
     let deleteTargetId = null;
 
@@ -427,6 +1125,12 @@
       document.getElementById('theme-icon').setAttribute('icon', savedTheme === 'dark' ? 'lucide:moon' : 'lucide:sun');
     });
 
+    window.addEventListener('resize', updateToggleUI);
+
+    function closePropertyDialog() {
+      document.getElementById('property-dialog').close();
+    }
+
     let currentImages = []; // Array de base64 ou URLs
 
     // Resizer and base64 converter
@@ -453,15 +1157,29 @@
       reader.readAsDataURL(file);
     }
 
-    document.getElementById('f-imagens').addEventListener('change', function(e) {
-      const files = Array.from(e.target.files);
-      files.forEach(file => {
+    function handleImageFiles(fileList) {
+      Array.from(fileList).forEach(file => {
         compressImage(file, 1200, function(base64Str) {
           currentImages.push(base64Str);
           renderImagePreviews();
+          recalcQualidade();
         });
       });
+    }
+
+    document.getElementById('f-imagens').addEventListener('change', function(e) {
+      handleImageFiles(e.target.files);
       e.target.value = ''; // Permite selecionar o mesmo arquivo se removido
+    });
+
+    const dropzoneEl = document.getElementById('dropzone');
+    dropzoneEl.addEventListener('click', () => document.getElementById('f-imagens').click());
+    dropzoneEl.addEventListener('dragover', (e) => { e.preventDefault(); dropzoneEl.classList.add('dragover'); });
+    dropzoneEl.addEventListener('dragleave', () => dropzoneEl.classList.remove('dragover'));
+    dropzoneEl.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzoneEl.classList.remove('dragover');
+      handleImageFiles(e.dataTransfer.files);
     });
 
     function renderImagePreviews() {
@@ -469,12 +1187,10 @@
       container.innerHTML = '';
       currentImages.forEach((src, index) => {
         const div = document.createElement('div');
-        div.style.position = 'relative';
-        div.style.width = '100px';
-        div.style.height = '75px';
+        div.className = 'img-thumb';
         div.innerHTML = `
-          <img src="${src}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-color);">
-          <button onclick="removeImage(${index})" type="button" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center;">&times;</button>
+          <img src="${src}" alt="Foto ${index + 1}">
+          <button onclick="removeImage(${index})" type="button" class="img-remove-btn" aria-label="Remover foto">&times;</button>
         `;
         container.appendChild(div);
       });
@@ -483,89 +1199,539 @@
     function removeImage(index) {
       currentImages.splice(index, 1);
       renderImagePreviews();
+      recalcQualidade();
+    }
+
+    // ---- Badges (chips com ícone) ----
+    function getAllBadges() {
+      return DEFAULT_BADGES.concat(customBadges);
+    }
+
+    function renderBadgesGrid() {
+      const grid = document.getElementById('badges-grid');
+      grid.innerHTML = '';
+      // Botão "+" fixo como primeiro item
+      const addChip = document.createElement('button');
+      addChip.type = 'button';
+      addChip.className = 'chip-option';
+      addChip.innerHTML = '<iconify-icon icon="mdi:plus"></iconify-icon><span>Novo</span>';
+      addChip.onclick = () => openBadgeDialog();
+      grid.appendChild(addChip);
+      getAllBadges().forEach(b => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'chip-option' + (selectedBadges.includes(b.nome) ? ' selected' : '');
+        const iconHtml = b.icon.startsWith('<svg') ? b.icon : `<iconify-icon icon="${b.icon}"></iconify-icon>`;
+        chip.innerHTML = `${iconHtml}<span>${b.nome}</span><iconify-icon icon="mdi:check" class="chip-check"></iconify-icon>`;
+        chip.onclick = () => toggleBadge(b.nome);
+        grid.appendChild(chip);
+      });
+    }
+
+    function toggleBadge(nome) {
+      const idx = selectedBadges.indexOf(nome);
+      if (idx > -1) selectedBadges.splice(idx, 1); else selectedBadges.push(nome);
+      renderBadgesGrid();
+      recalcQualidade();
+    }
+
+    let selectedBadgeIcon = 'lucide:star';
+    const availableLucideIcons = [
+      'lucide:star', 'lucide:award', 'lucide:heart', 'lucide:check-circle', 'lucide:shield', 
+      'lucide:zap', 'lucide:sun', 'lucide:moon', 'lucide:map-pin', 'lucide:home', 
+      'lucide:key', 'lucide:tag', 'lucide:camera', 'lucide:car', 'lucide:coffee', 
+      'lucide:trees', 'lucide:waves', 'lucide:snowflake', 'lucide:flame', 'lucide:anchor'
+    ];
+
+    function renderBadgeIconsPicker() {
+      const container = document.getElementById('badge-icons-container');
+      container.innerHTML = availableLucideIcons.map(icon => 
+        `<button type="button" class="badge-icon-option ${icon === selectedBadgeIcon ? 'selected' : ''}" data-icon="${icon}" onclick="selectBadgeIcon('${icon}')">
+          <iconify-icon icon="${icon}"></iconify-icon>
+        </button>`
+      ).join('');
+    }
+
+    function openBadgeDialog() {
+      document.getElementById('badge-dialog-name').value = '';
+      selectBadgeIcon('lucide:star');
+      renderBadgeIconsPicker();
+      document.getElementById('badge-dialog').showModal();
+    }
+
+    function closeBadgeDialog() {
+      document.getElementById('badge-dialog').close();
+    }
+
+    function selectBadgeIcon(icon) {
+      selectedBadgeIcon = icon;
+      document.querySelectorAll('.badge-icon-option').forEach(btn => {
+        if (btn.dataset.icon === icon) btn.classList.add('selected');
+        else btn.classList.remove('selected');
+      });
+    }
+
+    function addCustomBadgeFromDialog() {
+      const nome = document.getElementById('badge-dialog-name').value.trim();
+      if (!nome) return;
+      if (!getAllBadges().some(b => b.nome.toLowerCase() === nome.toLowerCase())) {
+        customBadges.push({ nome, icon: selectedBadgeIcon });
+        localStorage.setItem('custom_badges', JSON.stringify(customBadges));
+      }
+      if (!selectedBadges.includes(nome)) selectedBadges.push(nome);
+      renderBadgesGrid();
+      recalcQualidade();
+      closeBadgeDialog();
+    }
+
+    // ---- Características do imóvel (lista simples) ----
+    function getAllFeaturesImovel() {
+      return DEFAULT_FEATURES_IMOVEL.concat(customFeaturesImovel);
+    }
+
+    function buildFeatureCheckboxRow(nome, selectedArr, toggleFn, deleteFn = null) {
+      const label = document.createElement('label');
+      label.className = 'feature-check-row';
+      const checked = selectedArr.includes(nome);
+      label.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''}><span>${nome}</span>`;
+      label.querySelector('input').addEventListener('change', () => toggleFn(nome));
+      if (deleteFn) {
+        const delBtn = document.createElement('span');
+        delBtn.innerHTML = '<iconify-icon icon="mdi:close"></iconify-icon>';
+        delBtn.style.marginLeft = 'auto';
+        delBtn.style.color = '#888';
+        delBtn.style.display = 'flex';
+        delBtn.style.alignItems = 'center';
+        delBtn.style.padding = '4px';
+        delBtn.title = 'Remover item';
+        delBtn.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          deleteFn(nome);
+        };
+        label.appendChild(delBtn);
+      }
+      return label;
+    }
+
+    function renderFeatureListImovel() {
+      const container = document.getElementById('feature-list-imovel');
+      container.innerHTML = '';
+      getAllFeaturesImovel().forEach(nome => {
+        const isDefault = DEFAULT_FEATURES_IMOVEL.includes(nome);
+        const deleteFn = isDefault ? null : async (nomeToRemove) => {
+          if (await customConfirm(`Remover "${nomeToRemove}"?`)) {
+            const idx = customFeaturesImovel.indexOf(nomeToRemove);
+            if (idx > -1) {
+              customFeaturesImovel.splice(idx, 1);
+              localStorage.setItem('custom_features_imovel', JSON.stringify(customFeaturesImovel));
+              const sIdx = selectedFeaturesImovel.indexOf(nomeToRemove);
+              if (sIdx > -1) selectedFeaturesImovel.splice(sIdx, 1);
+              renderFeatureListImovel();
+              recalcQualidade();
+            }
+          }
+        };
+        container.appendChild(buildFeatureCheckboxRow(nome, selectedFeaturesImovel, toggleFeatureImovel, deleteFn));
+      });
+    }
+
+    function toggleFeatureImovel(nome) {
+      const idx = selectedFeaturesImovel.indexOf(nome);
+      if (idx > -1) selectedFeaturesImovel.splice(idx, 1); else selectedFeaturesImovel.push(nome);
+      recalcQualidade();
+    }
+
+    function addFeatureImovel() {
+      const input = document.getElementById('feature-imovel-input');
+      const nome = input.value.trim();
+      if (!nome) return;
+      if (!getAllFeaturesImovel().some(f => f.toLowerCase() === nome.toLowerCase())) {
+        customFeaturesImovel.push(nome);
+        localStorage.setItem('custom_features_imovel', JSON.stringify(customFeaturesImovel));
+      }
+      if (!selectedFeaturesImovel.includes(nome)) selectedFeaturesImovel.push(nome);
+      input.value = '';
+      renderFeatureListImovel();
+      recalcQualidade();
+    }
+
+    function handleFeatureImovelKeydown(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        addFeatureImovel();
+      }
+    }
+
+    // ---- Características do condomínio (agrupadas por categoria) ----
+    function renderFeatureGroupsCondominio() {
+      const container = document.getElementById('feature-groups-condominio');
+      container.innerHTML = '';
+      Object.keys(condominioCategorias).forEach(categoria => {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'feature-group';
+
+        const title = document.createElement('div');
+        title.className = 'feature-group-title';
+        title.innerText = categoria;
+        groupDiv.appendChild(title);
+
+        const list = document.createElement('div');
+        list.className = 'feature-list';
+        condominioCategorias[categoria].forEach(item => {
+          const isDefault = DEFAULT_CONDOMINIO_CATEGORIAS[categoria] && DEFAULT_CONDOMINIO_CATEGORIAS[categoria].includes(item);
+          const deleteFn = isDefault ? null : async (nomeToRemove) => {
+            if (await customConfirm(`Remover "${nomeToRemove}" da categoria ${categoria}?`)) {
+              condominioCategorias[categoria] = condominioCategorias[categoria].filter(x => x !== nomeToRemove);
+              localStorage.setItem('condominio_categorias', JSON.stringify(condominioCategorias));
+              const idx = selectedFeaturesCondominio.indexOf(nomeToRemove);
+              if (idx > -1) selectedFeaturesCondominio.splice(idx, 1);
+              renderFeatureGroupsCondominio();
+              recalcQualidade();
+            }
+          };
+          list.appendChild(buildFeatureCheckboxRow(item, selectedFeaturesCondominio, toggleFeatureCondominio, deleteFn));
+        });
+        groupDiv.appendChild(list);
+
+        const addRow = document.createElement('div');
+        addRow.className = 'feature-add-row feature-add-row-sm';
+        const addInput = document.createElement('input');
+        addInput.type = 'text';
+        addInput.placeholder = 'Novo item';
+        const addBtn = document.createElement('button');
+        addBtn.type = 'button';
+        addBtn.className = 'feature-add-btn';
+        addBtn.innerHTML = '<iconify-icon icon="mdi:plus"></iconify-icon>';
+        const doAdd = () => addItemCondominio(categoria, addInput);
+        addBtn.onclick = doAdd;
+        addInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doAdd(); } });
+        addRow.appendChild(addInput);
+        addRow.appendChild(addBtn);
+        groupDiv.appendChild(addRow);
+
+        container.appendChild(groupDiv);
+      });
+    }
+
+    function toggleFeatureCondominio(nome) {
+      const idx = selectedFeaturesCondominio.indexOf(nome);
+      if (idx > -1) selectedFeaturesCondominio.splice(idx, 1); else selectedFeaturesCondominio.push(nome);
+      recalcQualidade();
+    }
+
+    function addItemCondominio(categoria, inputEl) {
+      const nome = inputEl.value.trim();
+      if (!nome) return;
+      if (!condominioCategorias[categoria].some(i => i.toLowerCase() === nome.toLowerCase())) {
+        condominioCategorias[categoria].push(nome);
+        localStorage.setItem('condominio_categorias', JSON.stringify(condominioCategorias));
+      }
+      if (!selectedFeaturesCondominio.includes(nome)) selectedFeaturesCondominio.push(nome);
+      renderFeatureGroupsCondominio();
+      recalcQualidade();
+    }
+
+    function addCategoriaCondominio() {
+      const input = document.getElementById('categoria-condominio-input');
+      const nome = input.value.trim();
+      if (!nome || condominioCategorias[nome]) { input.value = ''; return; }
+      condominioCategorias[nome] = [];
+      localStorage.setItem('condominio_categorias', JSON.stringify(condominioCategorias));
+      input.value = '';
+      renderFeatureGroupsCondominio();
+    }
+
+    // ---- CEP (busca automática via ViaCEP) ----
+    function handleCepInput(input) {
+      let v = input.value.replace(/\D/g, '').slice(0, 8);
+      if (v.length > 5) v = v.slice(0, 5) + '-' + v.slice(5);
+      input.value = v;
+    }
+
+    async function lookupCep() {
+      const raw = document.getElementById('f-cep').value.replace(/\D/g, '');
+      if (raw.length !== 8) return;
+      try {
+        const res = await fetch(`https://viacep.com.br/ws/${raw}/json/`);
+        const data = await res.json();
+        if (data.erro) return;
+        document.getElementById('f-cidade').value = data.localidade || '';
+        document.getElementById('f-uf').value = data.uf || '';
+        document.getElementById('f-bairro').value = data.bairro || '';
+        document.getElementById('f-endereco').value = data.logradouro || '';
+        recalcQualidade();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function focusManualLocation() {
+      document.getElementById('f-cidade').focus();
+    }
+
+    // ---- Índice de qualidade do anúncio ----
+    function calcularQualidade() {
+      const tipo = (document.getElementById('f-tipo').value || '').trim().toLowerCase();
+      const fotos = currentImages.length;
+      const descricao = (document.getElementById('f-descricao').value || '').trim();
+      const preco = (document.getElementById('f-preco').value || '').trim();
+      const cidade = (document.getElementById('f-cidade').value || '').trim();
+      const bairro = (document.getElementById('f-bairro').value || '').trim();
+      const endereco = (document.getElementById('f-endereco').value || '').trim();
+      const youtube = (document.getElementById('f-youtube').value || '').trim();
+      const areaUtil = (document.getElementById('f-area-util').value || '').trim();
+      const areaTotal = (document.getElementById('f-area-total').value || '').trim();
+
+      let score = 0;
+      const detalhes = [];
+
+      let fotosIdeal = 15;
+      let fotosMin = 5;
+      if (tipo.includes('terreno') || tipo.includes('lote')) {
+        fotosIdeal = 3;
+        fotosMin = 1;
+      } else if (tipo.includes('comercial') || tipo.includes('prédio') || tipo.includes('loja')) {
+        fotosIdeal = 8;
+        fotosMin = 3;
+      }
+
+      const fotosOk = fotos >= fotosIdeal;
+      score += fotosOk ? 2 : (fotos >= fotosMin ? 1 : 0);
+      detalhes.push({ ok: fotos >= fotosMin, label: fotosOk ? 'Boa quantidade de fotos' : `Adicione mais fotos (ideal: ${fotosIdeal} ou mais)` });
+
+      const descOk = descricao.length >= 150;
+      score += descOk ? 2 : (descricao.length >= 50 ? 1 : 0);
+      detalhes.push({ ok: descricao.length >= 50, label: descOk ? 'Descrição completa' : 'Descrição curta — capriche nos detalhes' });
+
+      score += preco ? 1 : 0;
+      detalhes.push({ ok: !!preco, label: 'Preço preenchido' });
+
+      const localizacaoOk = !!(cidade && bairro && endereco);
+      score += localizacaoOk ? 1 : 0;
+      detalhes.push({ ok: localizacaoOk, label: 'Localização completa' });
+
+      const areaOk = !!(areaUtil || areaTotal);
+      score += areaOk ? 1 : 0;
+      detalhes.push({ ok: areaOk, label: 'Área informada (útil ou total)' });
+
+      score += selectedFeaturesImovel.length > 0 ? 1 : 0;
+      detalhes.push({ ok: selectedFeaturesImovel.length > 0, label: 'Características do imóvel selecionadas' });
+
+      score += selectedFeaturesCondominio.length > 0 ? 1 : 0;
+      detalhes.push({ ok: selectedFeaturesCondominio.length > 0, label: 'Características do condomínio selecionadas' });
+
+      score += selectedBadges.length > 0 ? 1 : 0;
+      detalhes.push({ ok: selectedBadges.length > 0, label: 'Badges selecionados' });
+
+      score += youtube ? 1 : 0;
+      detalhes.push({ ok: !!youtube, label: 'Vídeo do YouTube adicionado' });
+
+      return { score, detalhes };
+    }
+
+    function recalcQualidade() {
+      const { score, detalhes } = calcularQualidade();
+      document.getElementById('quality-score-value').innerText = score + '/10';
+      const fill = document.getElementById('quality-bar-fill');
+      fill.style.width = (score * 10) + '%';
+      
+      if (score <= 4) {
+        fill.style.backgroundColor = '#e74c3c';
+      } else if (score <= 7) {
+        fill.style.backgroundColor = '#f1c40f';
+      } else {
+        fill.style.backgroundColor = '#2ecc71';
+      }
+
+      document.getElementById('quality-details').innerHTML = detalhes.map(d =>
+        `<li class="${d.ok ? 'ok' : 'missing'}"><iconify-icon icon="${d.ok ? 'mdi:check-circle' : 'mdi:circle-outline'}"></iconify-icon> ${d.label}</li>`
+      ).join('');
+    }
+
+    function toggleQualityDetails() {
+      const details = document.getElementById('quality-details');
+      const btn = document.getElementById('quality-toggle-btn');
+      const isOpen = details.classList.toggle('open');
+      btn.innerText = isOpen ? 'Ocultar detalhes' : 'Ver detalhes';
+    }
+
+    function hideQualityPanel() {
+      document.getElementById('quality-panel').style.display = 'none';
+      document.getElementById('quality-show-btn').style.display = 'flex';
+      localStorage.setItem('quality_panel_hidden', '1');
+    }
+
+    function showQualityPanel() {
+      document.getElementById('quality-panel').style.display = '';
+      document.getElementById('quality-show-btn').style.display = 'none';
+      localStorage.removeItem('quality_panel_hidden');
     }
 
     function openForm(id = null) {
+      currentPendingId = null;
       document.getElementById('form-title').innerText = id ? 'Editar Imóvel' : 'Novo Imóvel';
-      
+
       if (id) {
         const imovel = imoveisData.find(i => i.id === id);
         document.getElementById('imovel-id').value = imovel.id;
         document.getElementById('f-nome').value = imovel.nome || '';
         document.getElementById('f-construtora').value = imovel.construtora || '';
-        document.getElementById('f-localizacao').value = imovel.localizacao || '';
         document.getElementById('f-preco').value = imovel.preco || '';
-        document.getElementById('f-tipo').value = imovel.tipo || 'Apartamento';
-        
+        setTipo(imovel.tipo || 'Apartamento');
+
+        dialogCategoria = imovel.categoria || (imovel.tipo === 'Sala Comercial' ? 'Comercial' : 'Residencial');
         let finalidade = imovel.finalidade || 'Compra';
         if (finalidade === 'Locação') finalidade = 'Aluguel';
-        const radio = document.querySelector(`input[name="f-finalidade"][value="${finalidade}"]`);
-        if (radio) radio.checked = true;
+        dialogFinalidade = finalidade;
 
-        document.getElementById('f-quartos').value = imovel.quartos || 0;
+        document.getElementById('f-cep').value = imovel.cep || '';
+        document.getElementById('f-uf').value = imovel.uf || '';
+        document.getElementById('f-endereco').value = imovel.endereco || '';
+        document.getElementById('f-numero').value = imovel.numero || '';
+        document.getElementById('f-complemento').value = imovel.complemento || '';
+        if (imovel.cidade || imovel.bairro) {
+          document.getElementById('f-cidade').value = imovel.cidade || '';
+          document.getElementById('f-bairro').value = imovel.bairro || '';
+        } else if (imovel.localizacao) {
+          // Compatibilidade com imóveis antigos que só tinham o campo "localizacao"
+          const partes = imovel.localizacao.split(',').map(s => s.trim());
+          document.getElementById('f-bairro').value = partes[0] || '';
+          document.getElementById('f-cidade').value = partes[1] || '';
+        } else {
+          document.getElementById('f-cidade').value = '';
+          document.getElementById('f-bairro').value = '';
+        }
+
+        document.getElementById('f-valor-venda').value = imovel.valorVenda || '';
+        document.getElementById('f-valor-aluguel').value = imovel.valorAluguel || '';
+        dialogCondominioIsento = imovel.condominioIsento ? 'true' : 'false';
+        document.getElementById('f-valor-condominio').value = imovel.valorCondominio || '';
+        dialogIptuIsento = imovel.iptuIsento ? 'true' : 'false';
+        document.getElementById('f-valor-iptu').value = imovel.valorIptu || '';
+        dialogPeriodoIptu = imovel.periodoIptu || 'Anual';
+        updatePrecoToggleUI();
+        togglePrecoInputs();
+
+        document.getElementById('f-quartos').value = imovel.quartos || '';
         document.getElementById('f-suites').value = imovel.suites || 0;
+        document.getElementById('f-banheiros').value = imovel.banheiros || 0;
         document.getElementById('f-vagas').value = imovel.vagas || 0;
-        document.getElementById('f-area').value = imovel.area ? imovel.area.replace(/[^\d.]/g, '') : '';
+        const areaUtilFallback = imovel.areaUtil || imovel.area || '';
+        document.getElementById('f-area-util').value = areaUtilFallback ? areaUtilFallback.replace(/[^\d.]/g, '') : '';
+        document.getElementById('f-area-total').value = imovel.areaTotal ? imovel.areaTotal.replace(/[^\d.]/g, '') : '';
         document.getElementById('f-youtube').value = imovel.youtube || '';
         document.getElementById('f-descricao').value = imovel.descricao || '';
-        
+
         currentImages = imovel.imagens ? [...imovel.imagens] : (imovel.imagem ? [imovel.imagem] : []);
         renderImagePreviews();
-        
-        const badgesArr = imovel.badges ? imovel.badges : (imovel.badge ? [imovel.badge] : []);
-        const selectBadges = document.getElementById('f-badges');
-        Array.from(selectBadges.options).forEach(opt => {
-          opt.selected = badgesArr.includes(opt.value);
-        });
+
+        selectedBadges = imovel.badges ? [...imovel.badges] : (imovel.badge ? [imovel.badge] : []);
+        selectedFeaturesImovel = imovel.caracteristicas ? [...imovel.caracteristicas] : [];
+        selectedFeaturesCondominio = imovel.caracteristicasCondominio ? [...imovel.caracteristicasCondominio] : [];
       } else {
         document.getElementById('imovel-id').value = '';
         document.getElementById('f-nome').value = '';
         document.getElementById('f-construtora').value = '';
-        document.getElementById('f-localizacao').value = '';
         document.getElementById('f-preco').value = '';
-        document.getElementById('f-tipo').value = 'Apartamento';
-        document.querySelector('input[name="f-finalidade"][value="Compra"]').checked = true;
+        setTipo('Apartamento');
+        dialogCategoria = 'Residencial';
+        dialogFinalidade = 'Compra';
+
+        document.getElementById('f-cep').value = '';
+        document.getElementById('f-cidade').value = '';
+        document.getElementById('f-bairro').value = '';
+
+        document.getElementById('f-valor-venda').value = '';
+        document.getElementById('f-valor-aluguel').value = '';
+        dialogCondominioIsento = 'false';
+        document.getElementById('f-valor-condominio').value = '';
+        dialogIptuIsento = 'false';
+        document.getElementById('f-valor-iptu').value = '';
+        dialogPeriodoIptu = 'Anual';
+        updatePrecoToggleUI();
+        togglePrecoInputs();
+
+        document.getElementById('f-quartos').value = '';
+        document.getElementById('f-endereco').value = '';
+        document.getElementById('f-numero').value = '';
+        document.getElementById('f-complemento').value = '';
+
         document.getElementById('f-quartos').value = 0;
         document.getElementById('f-suites').value = 0;
+        document.getElementById('f-banheiros').value = 0;
         document.getElementById('f-vagas').value = 0;
-        document.getElementById('f-area').value = '';
+        document.getElementById('f-area-util').value = '';
+        document.getElementById('f-area-total').value = '';
         document.getElementById('f-youtube').value = '';
         document.getElementById('f-descricao').value = '';
-        
+
         currentImages = [];
         renderImagePreviews();
-        
-        const selectBadges = document.getElementById('f-badges');
-        Array.from(selectBadges.options).forEach(opt => opt.selected = false);
+
+        selectedBadges = [];
+        selectedFeaturesImovel = [];
+        selectedFeaturesCondominio = [];
       }
-      
-      switchPanel('form-panel');
+
+      renderBadgesGrid();
+      renderFeatureListImovel();
+      renderFeatureGroupsCondominio();
+
+      if (localStorage.getItem('quality_panel_hidden')) {
+        hideQualityPanel();
+      } else {
+        showQualityPanel();
+      }
+
+      document.getElementById('property-dialog').showModal();
+      updateToggleUI();
+      recalcQualidade();
     }
 
     function saveProperty() {
       const idVal = document.getElementById('imovel-id').value;
       const novoId = idVal ? parseInt(idVal) : Date.now();
-      
-      const selectBadges = document.getElementById('f-badges');
-      const selectedBadges = Array.from(selectBadges.selectedOptions).map(opt => opt.value);
-      
+
+      const cidade = document.getElementById('f-cidade').value;
+      const bairro = document.getElementById('f-bairro').value;
+
       const imovel = {
         id: novoId,
         nome: document.getElementById('f-nome').value,
         construtora: document.getElementById('f-construtora').value,
-        localizacao: document.getElementById('f-localizacao').value,
+        localizacao: [bairro, cidade].filter(Boolean).join(', '),
+        cep: document.getElementById('f-cep').value,
+        cidade: cidade,
+        uf: document.getElementById('f-uf').value,
+        bairro: bairro,
+        endereco: document.getElementById('f-endereco').value,
+        numero: document.getElementById('f-numero').value,
+        complemento: document.getElementById('f-complemento').value,
         preco: document.getElementById('f-preco').value,
+        valorVenda: document.getElementById('f-valor-venda').value,
+        valorAluguel: document.getElementById('f-valor-aluguel').value,
+        condominioIsento: dialogCondominioIsento === 'true',
+        valorCondominio: document.getElementById('f-valor-condominio').value,
+        iptuIsento: dialogIptuIsento === 'true',
+        valorIptu: document.getElementById('f-valor-iptu').value,
+        periodoIptu: dialogPeriodoIptu,
         tipo: document.getElementById('f-tipo').value,
-        finalidade: document.querySelector('input[name="f-finalidade"]:checked').value,
+        categoria: dialogCategoria,
+        finalidade: dialogFinalidade,
         quartos: parseInt(document.getElementById('f-quartos').value) || 0,
         suites: parseInt(document.getElementById('f-suites').value) || 0,
+        banheiros: parseInt(document.getElementById('f-banheiros').value) || 0,
         vagas: parseInt(document.getElementById('f-vagas').value) || 0,
-        area: document.getElementById('f-area').value ? document.getElementById('f-area').value + ' m²' : '',
+        areaUtil: document.getElementById('f-area-util').value ? document.getElementById('f-area-util').value + ' m²' : '',
+        areaTotal: document.getElementById('f-area-total').value ? document.getElementById('f-area-total').value + ' m²' : '',
         imagens: [...currentImages],
         imagem: currentImages.length > 0 ? currentImages[0] : '', // Fallback para codigo antigo
         youtube: document.getElementById('f-youtube').value,
-        badges: selectedBadges,
+        badges: [...selectedBadges],
         badge: selectedBadges.length > 0 ? selectedBadges[0] : '', // Fallback
+        caracteristicas: [...selectedFeaturesImovel],
+        caracteristicasCondominio: [...selectedFeaturesCondominio],
         descricao: document.getElementById('f-descricao').value,
       };
 
@@ -581,7 +1747,15 @@
         imoveisData.push(imovel);
       }
 
-      showList();
+      if (currentPendingId) {
+        pendingImoveis = pendingImoveis.filter(p => p.pendingId !== currentPendingId);
+        localStorage.setItem('pending_imoveis', JSON.stringify(pendingImoveis));
+        currentPendingId = null;
+        renderPendingList();
+      }
+
+      closePropertyDialog();
+      renderList();
     }
 
     // Função para codificar em base64 corretamente lidando com UTF-8 (acentos)
@@ -600,34 +1774,70 @@
       btnSync.disabled = true;
       btnSync.innerHTML = 'Sincronizando... <iconify-icon icon="mdi:loading" class="spin"></iconify-icon>';
 
-      try {
-        const path = 'data.js';
-        const url = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${path}`;
-        const headers = {
-          'Authorization': `Bearer ${githubConfig.token}`,
-          'Accept': 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json'
-        };
+      const headers = {
+        'Authorization': `Bearer ${githubConfig.token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      };
+      const apiBase = `https://api.github.com/repos/${githubConfig.owner}/${githubConfig.repo}`;
 
-        // 1. Tentar pegar o SHA do arquivo atual (se existir)
+      try {
+        // 0. Descobrir a branch padrão do repositório (usada para montar o link das fotos)
+        const repoRes = await fetch(apiBase, { headers });
+        if (!repoRes.ok) throw new Error('Não foi possível acessar o repositório. Verifique proprietário, nome e token.');
+        const branch = (await repoRes.json()).default_branch || 'main';
+
+        // 1. Enviar cada foto nova (ainda em base64) como um arquivo separado em /images
+        let totalImgs = 0;
+        imoveisData.forEach(im => (im.imagens || []).forEach(src => { if (src.startsWith('data:')) totalImgs++; }));
+        let doneImgs = 0;
+
+        for (const imovel of imoveisData) {
+          if (!imovel.imagens) continue;
+          for (let i = 0; i < imovel.imagens.length; i++) {
+            const src = imovel.imagens[i];
+            if (!src.startsWith('data:')) continue; // já é uma foto sincronizada anteriormente
+
+            doneImgs++;
+            btnSync.innerHTML = `Enviando foto ${doneImgs}/${totalImgs}... <iconify-icon icon="mdi:loading" class="spin"></iconify-icon>`;
+
+            const fileName = `images/${imovel.id}-${Date.now()}-${i}.jpg`;
+            const putImgRes = await fetch(`${apiBase}/contents/${fileName}`, {
+              method: 'PUT',
+              headers,
+              body: JSON.stringify({
+                message: `Adiciona foto de ${imovel.nome}`,
+                content: src.split(',')[1],
+                branch
+              })
+            });
+            if (!putImgRes.ok) {
+              const errData = await putImgRes.json();
+              throw new Error(errData.message || `Erro ao enviar uma foto de ${imovel.nome}.`);
+            }
+            imovel.imagens[i] = `https://raw.githubusercontent.com/${githubConfig.owner}/${githubConfig.repo}/${branch}/${fileName}`;
+          }
+          imovel.imagem = imovel.imagens.length > 0 ? imovel.imagens[0] : '';
+        }
+
+        btnSync.innerHTML = 'Salvando dados... <iconify-icon icon="mdi:loading" class="spin"></iconify-icon>';
+
+        // 2. Tentar pegar o SHA do data.js atual (se existir)
+        const path = 'data.js';
+        const url = `${apiBase}/contents/${path}`;
         let sha = null;
         const getRes = await fetch(url, { headers });
         if (getRes.ok) {
-          const getData = await getRes.json();
-          sha = getData.sha;
+          sha = (await getRes.json()).sha;
         } else if (getRes.status !== 404) {
           throw new Error('Falha ao verificar arquivo no repositório. Verifique o repositório e o token.');
         }
 
-        // 2. Gerar o novo conteúdo do arquivo
+        // 3. Gerar o novo conteúdo do arquivo (agora só com links das fotos, sem base64)
         const newContent = "window.imoveis = " + JSON.stringify(imoveisData, null, 2) + ";";
         const base64Content = utf8_to_b64(newContent);
 
-        // 3. Fazer o PUT para atualizar/criar
-        const body = {
-          message: 'Atualizando imóveis pelo Admin',
-          content: base64Content
-        };
+        const body = { message: 'Atualizando imóveis pelo Admin', content: base64Content, branch };
         if (sha) body.sha = sha;
 
         const putRes = await fetch(url, {
@@ -637,6 +1847,7 @@
         });
 
         if (putRes.ok) {
+          renderList(); // atualiza as miniaturas com os novos links das fotos
           showMsg('Sucesso! Sincronizado com o GitHub. O site será atualizado em alguns minutos.', 'success');
         } else {
           const errData = await putRes.json();
@@ -647,7 +1858,7 @@
         showMsg('Erro: ' + error.message, 'error');
       } finally {
         btnSync.disabled = false;
-        btnSync.innerHTML = 'Sincronizar com GitHub <iconify-icon icon="mdi:cloud-upload"></iconify-icon>';
+        btnSync.innerHTML = 'Sincronizar <iconify-icon icon="mdi:cloud-upload"></iconify-icon>';
       }
     }
   </script>
