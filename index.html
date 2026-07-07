@@ -1039,6 +1039,41 @@
       color: var(--color-pearl);
     }
 
+    .card-placeholder {
+      background-color: transparent;
+      border: 1.5px dashed var(--color-khaki);
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+    }
+
+    .card-placeholder:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .card-placeholder-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-taupe);
+    }
+
+    .card-placeholder-inner iconify-icon {
+      font-size: 2.2rem;
+    }
+
+    .card-placeholder-inner p {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
     .no-results {
       grid-column: 1 / -1;
       text-align: center;
@@ -2298,6 +2333,19 @@
 
       data.forEach(imovel => {
         const card = document.createElement('div');
+
+        if (imovel.placeholder) {
+          card.className = 'card card-placeholder';
+          card.innerHTML = `
+            <div class="card-placeholder-inner">
+              <iconify-icon icon="mdi:home-plus-outline"></iconify-icon>
+              <p>Novo imóvel em breve</p>
+            </div>
+          `;
+          grid.appendChild(card);
+          return;
+        }
+
         card.className = 'card';
 
         const featuresHTML = renderFeaturesHTML(imovel, 'feature');
@@ -2377,7 +2425,14 @@
     // Inicialização
     populateCaracteristicaOptions();
     initSiteSelects();
-    renderCards(imoveis.slice(0, 6));
+
+    // Em Destaque: os 6 primeiros imóveis cadastrados no admin (não-padrão);
+    // vagas restantes ficam com um fallback vazio até serem cadastrados
+    const imoveisDestaque = imoveis.filter(imovel => !imovel.isDefault).slice(0, 6);
+    while (imoveisDestaque.length < 6) {
+      imoveisDestaque.push({ placeholder: true });
+    }
+    renderCards(imoveisDestaque);
 
     // Modal
     let modalGalleryImgs = [];
