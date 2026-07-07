@@ -97,7 +97,7 @@ window.imoveis = [
     "nome": "Iconic Tower",
     "construtora": "FG",
     "localizacao": "Centro, Balneário Camboriú",
-    "cep": "",
+    "cep": "88330-543",
     "cidade": "Balneário Camboriú",
     "uf": "SC",
     "bairro": "Centro",
