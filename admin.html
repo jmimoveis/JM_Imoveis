@@ -49,6 +49,7 @@
     .container { max-width: 1000px; margin: 0 auto; background: var(--container-bg); padding: 2rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: background-color 0.3s; }
     h1, h2 { font-family: var(--font-main); margin-bottom: 1.5rem; font-weight: 700; }
     .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--color-khaki); padding-bottom: 1rem; }
+    .header-actions h1 { margin-bottom: 0; }
     
     .btn { height: 44px; padding: 0 20px; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; transition: var(--transition); display: inline-flex; align-items: center; gap: 8px; }
     .btn-icon-square { width: 44px; padding: 0; justify-content: center; flex-shrink: 0; }
@@ -81,6 +82,21 @@
     .form-group { margin-bottom: 1.5rem; }
     .form-group label { display: block; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; color: var(--color-taupe); margin-bottom: 5px; }
     .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; font-family: var(--font-main); font-size: 1rem; background-color: var(--input-bg); color: var(--input-text); transition: all 0.3s; }
+    
+    .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip-option { position: relative; background: transparent; border: 1px solid var(--border-color); border-radius: 20px; padding: 6px 14px; font-family: var(--font-main); font-size: 0.85rem; color: var(--color-black); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; user-select: none; -webkit-user-select: none; }
+    
+    @keyframes shake-badge {
+      0% { transform: translateX(0) rotate(0); }
+      25% { transform: translateX(-1px) rotate(-1deg); }
+      50% { transform: translateX(1px) rotate(1deg); }
+      75% { transform: translateX(-1px) rotate(-1deg); }
+      100% { transform: translateX(0) rotate(0); }
+    }
+    .chip-option.pressing { animation: shake-badge 0.2s ease-in-out infinite; }
+    
+    .chip-option:hover { background: #e3dcc8; border-color: #d1c8af; color: var(--color-black); }
+
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--color-leather); }
     
     /* Remove arrows from number inputs */
@@ -327,6 +343,8 @@
     .chip-option.selected { background: var(--color-leather); border-color: var(--color-leather); color: var(--color-khaki); }
     .chip-option.selected iconify-icon:first-child, .chip-option.selected svg:first-child { color: var(--color-khaki); }
     .chip-option.selected .chip-check { display: inline-flex; }
+    .chip-option.destaque { background: var(--color-taupe); border-color: var(--color-taupe); color: #000; }
+    .chip-option.destaque iconify-icon:first-child, .chip-option.destaque svg:first-child, .chip-option.destaque .chip-check { color: #000; }
 
     /* Badge Picker Dialog */
     .badge-icons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap: 8px; margin-top: 10px; }
@@ -786,9 +804,10 @@
       </div>
 
       <div class="form-group">
-        <label>Badges</label>
+        <label>Badges (pressione e segure para marcar como destaque)</label>
         <div class="chip-grid" id="badges-grid"></div>
       </div>
+      <input type="hidden" id="f-destaque-badge">
 
       <div class="form-group">
         <label>Link do YouTube</label>
@@ -1821,17 +1840,81 @@
       getAllBadges().forEach(b => {
         const chip = document.createElement('button');
         chip.type = 'button';
-        chip.className = 'chip-option' + (selectedBadges.includes(b.nome) ? ' selected' : '');
+        
+        let classNames = 'chip-option';
+        if (selectedBadges.includes(b.nome)) classNames += ' selected';
+        const destaqueInput = document.getElementById('f-destaque-badge');
+        if (destaqueInput && destaqueInput.dataset.savedValue === b.nome) classNames += ' destaque';
+        
+        chip.className = classNames;
         const iconHtml = b.icon.startsWith('<svg') ? b.icon : `<iconify-icon icon="${b.icon}"></iconify-icon>`;
         chip.innerHTML = `${iconHtml}<span>${b.nome}</span><iconify-icon icon="mdi:check" class="chip-check"></iconify-icon>`;
-        chip.onclick = () => toggleBadge(b.nome, chip);
+        
+        let isLongPress = false;
+        let pressTimer;
+        
+        const startPress = () => {
+          isLongPress = false;
+          chip.classList.add('pressing');
+          pressTimer = setTimeout(() => {
+            isLongPress = true;
+            chip.classList.remove('pressing');
+            setDestaqueBadge(b.nome, chip);
+          }, 600);
+        };
+        const cancelPress = () => {
+          chip.classList.remove('pressing');
+          if (pressTimer) clearTimeout(pressTimer);
+        };
+        
+        chip.addEventListener('mousedown', (e) => { if (e.button === 0) startPress(); });
+        chip.addEventListener('touchstart', startPress, {passive: true});
+        chip.addEventListener('mouseup', cancelPress);
+        chip.addEventListener('mouseleave', cancelPress);
+        chip.addEventListener('touchend', cancelPress);
+        
+        chip.onclick = (e) => {
+          if (isLongPress) {
+            e.preventDefault();
+            return;
+          }
+          toggleBadge(b.nome, chip);
+        };
+        
         grid.appendChild(chip);
       });
     }
 
+    function setDestaqueBadge(nome, chip) {
+      if (!selectedBadges.includes(nome)) {
+        selectedBadges.push(nome);
+      }
+      
+      document.querySelectorAll('#badges-grid .chip-option').forEach(c => c.classList.remove('destaque'));
+      
+      chip.classList.add('selected');
+      chip.classList.add('destaque');
+
+      const input = document.getElementById('f-destaque-badge');
+      input.dataset.savedValue = nome;
+      input.value = nome;
+      
+      recalcQualidade();
+    }
+
     function toggleBadge(nome, chip) {
       const idx = selectedBadges.indexOf(nome);
-      if (idx > -1) selectedBadges.splice(idx, 1); else selectedBadges.push(nome);
+      const input = document.getElementById('f-destaque-badge');
+      if (idx > -1) {
+        selectedBadges.splice(idx, 1);
+        if (input.dataset.savedValue === nome) {
+          input.value = '';
+          input.dataset.savedValue = '';
+          if (chip) chip.classList.remove('destaque');
+        }
+      } else {
+        selectedBadges.push(nome);
+      }
       if (chip) chip.classList.toggle('selected', selectedBadges.includes(nome));
       else renderBadgesGrid();
       recalcQualidade();
@@ -1882,6 +1965,7 @@
       }
       if (!selectedBadges.includes(nome)) selectedBadges.push(nome);
       renderBadgesGrid();
+      renderDestaqueBadgeSelect();
       recalcQualidade();
       closeBadgeDialog();
     }
@@ -2231,6 +2315,7 @@
         renderImagePreviews();
 
         selectedBadges = imovel.badges ? [...imovel.badges] : (imovel.badge ? [imovel.badge] : []);
+        document.getElementById('f-destaque-badge').dataset.savedValue = imovel.destaqueBadge || '';
         selectedFeaturesImovel = imovel.caracteristicas ? [...imovel.caracteristicas] : [];
         selectedFeaturesCondominio = imovel.caracteristicasCondominio ? [...imovel.caracteristicasCondominio] : [];
       } else {
@@ -2276,6 +2361,7 @@
         renderImagePreviews();
 
         selectedBadges = [];
+        document.getElementById('f-destaque-badge').dataset.savedValue = '';
         selectedFeaturesImovel = [];
         selectedFeaturesCondominio = [];
       }
@@ -2336,6 +2422,7 @@
         imagem: currentImages.length > 0 ? currentImages[0] : '', // Fallback para codigo antigo
         youtube: document.getElementById('f-youtube').value,
         badges: [...selectedBadges],
+        destaqueBadge: document.getElementById('f-destaque-badge').value,
         badge: selectedBadges.length > 0 ? selectedBadges[0] : '', // Fallback
         caracteristicas: [...selectedFeaturesImovel],
         caracteristicasCondominio: [...selectedFeaturesCondominio],
