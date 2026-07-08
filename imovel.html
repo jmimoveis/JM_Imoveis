@@ -566,7 +566,7 @@
       
       try {
         const img = new Image();
-        if (imgSrc.startsWith('http')) {
+        if (imgSrc && imgSrc.startsWith('http')) {
           img.crossOrigin = "anonymous";
         }
         await new Promise((resolve, reject) => {
@@ -575,25 +575,38 @@
           img.src = imgSrc;
         });
 
+        const MAX_DIM = 1200;
+        let imgW = img.width;
+        let imgH = img.height;
+        if (imgW > MAX_DIM || imgH > MAX_DIM) {
+          if (imgW > imgH) {
+            imgH = Math.round(imgH * (MAX_DIM / imgW));
+            imgW = MAX_DIM;
+          } else {
+            imgW = Math.round(imgW * (MAX_DIM / imgH));
+            imgH = MAX_DIM;
+          }
+        }
+
         const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
+        canvas.width = imgW;
+        canvas.height = imgH;
         const ctx = canvas.getContext('2d');
         
-        ctx.drawImage(img, 0, 0);
+        ctx.drawImage(img, 0, 0, imgW, imgH);
         
         ctx.filter = 'brightness(0) invert(1) opacity(0.3)';
         const cols = 5;
         const rows = 5;
-        const w = canvas.width / cols;
-        const h = canvas.height / rows;
-        const logoW = w * 0.5;
+        const cellW = canvas.width / cols;
+        const cellH = canvas.height / rows;
+        const logoW = cellW * 0.5;
         const logoH = watermarkLogo.width ? logoW * (watermarkLogo.height / watermarkLogo.width) : logoW * 0.68;
         
         for(let i = 0; i < cols; i++){
           for(let j = 0; j < rows; j++){
             ctx.save();
-            ctx.translate(i * w + w / 2, j * h + h / 2);
+            ctx.translate(i * cellW + cellW / 2, j * cellH + cellH / 2);
             ctx.rotate(-Math.PI / 6);
             ctx.drawImage(watermarkLogo, -logoW / 2, -logoH / 2, logoW, logoH);
             ctx.restore();
