@@ -679,10 +679,22 @@
       fitLightboxWrapper();
       if (lightboxCounter) lightboxCounter.textContent = `${galleryIndex + 1} / ${galleryImgs.length}`;
       if (thumbsWrap) {
-        Array.from(thumbsWrap.children).forEach((img, i) => img.classList.toggle('active', i === galleryIndex));
+        Array.from(thumbsWrap.children).forEach((img, i) => {
+          const isActive = i === galleryIndex;
+          img.classList.toggle('active', isActive);
+          if (isActive) {
+            img.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          }
+        });
       }
       if (lightboxThumbsWrap) {
-        Array.from(lightboxThumbsWrap.children).forEach((img, i) => img.classList.toggle('active', i === galleryIndex));
+        Array.from(lightboxThumbsWrap.children).forEach((img, i) => {
+          const isActive = i === galleryIndex;
+          img.classList.toggle('active', isActive);
+          if (isActive) {
+            img.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          }
+        });
       }
       if (galleryView === 'photos') updateGalleryTagUI();
     }
