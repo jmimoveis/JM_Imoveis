@@ -83,7 +83,7 @@
       body.page-leaving { transition: none; }
     }
     a { text-decoration: none; color: inherit; }
-    img { max-width: 100%; height: auto; display: block; border-radius: 12px; }
+    img { max-width: 100%; height: auto; display: block; }
     .serif { font-family: var(--font-serif); }
 
     header {
@@ -195,11 +195,10 @@
     .lightbox.active .lightbox-photos.active, .lightbox.active .lightbox-map.active, .lightbox.active .lightbox-video.active { pointer-events: auto; }
     .lightbox-img-wrapper {
       position: relative;
-      display: flex;
-      max-width: 100%;
-      max-height: 100%;
+      border-radius: 16px;
+      overflow: hidden;
     }
-    .lightbox-img-wrapper img:not(.watermark) { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; }
+    .lightbox-img-wrapper img:not(.watermark) { width: 100%; height: 100%; object-fit: contain; display: block; }
     .lightbox-map iframe, .lightbox-video iframe { width: 100%; height: 100%; border: 0; border-radius: 12px; }
     .lightbox-controls { display: flex; align-items: center; justify-content: center; gap: 18px; flex-shrink: 0; }
     .lightbox-nav {
@@ -629,6 +628,38 @@
       }
     }
 
+    // O wrapper da lightbox precisa ter o tamanho EXATO da imagem renderizada (não do
+    // espaço disponível) para que os cantos arredondados e a marca d'água fiquem sempre
+    // colados à foto. Isso é calculado em JS em vez de depender do encolhimento automático
+    // do flexbox, que se comporta de forma inconsistente entre navegadores com imagens
+    // grandes/object-fit: contain.
+    function fitLightboxWrapper() {
+      const wrapper = document.getElementById('lightbox-img-wrapper');
+      const img = document.getElementById('lightbox-img');
+      const stage = document.getElementById('lightbox-photos');
+      if (!wrapper || !img || !stage) return;
+      const apply = () => {
+        const natW = img.naturalWidth;
+        const natH = img.naturalHeight;
+        if (!natW || !natH) return;
+        const availW = stage.clientWidth;
+        const availH = stage.clientHeight;
+        if (!availW || !availH) return;
+        const scale = Math.min(availW / natW, availH / natH, 1);
+        wrapper.style.width = Math.round(natW * scale) + 'px';
+        wrapper.style.height = Math.round(natH * scale) + 'px';
+      };
+      if (img.complete && img.naturalWidth) {
+        apply();
+      } else {
+        img.addEventListener('load', apply, { once: true });
+      }
+    }
+    window.addEventListener('resize', () => {
+      const lightbox = document.getElementById('gallery-lightbox');
+      if (lightbox && lightbox.classList.contains('active') && galleryView === 'photos') fitLightboxWrapper();
+    });
+
     function renderGallery() {
       const mainImg = document.getElementById('gallery-main-img');
       const counter = document.getElementById('gallery-counter');
@@ -639,12 +670,13 @@
       if (!mainImg || galleryImgs.length === 0) return;
       const currentSrc = galleryImgs[galleryIndex];
       mainImg.src = currentSrc;
-      
+
       applyWatermarkOverlay(currentSrc, 'gallery-copy-overlay');
       applyWatermarkOverlay(currentSrc, 'lightbox-copy-overlay');
 
       if (counter) counter.textContent = `${galleryIndex + 1} / ${galleryImgs.length}`;
       if (lightboxImg) lightboxImg.src = currentSrc;
+      fitLightboxWrapper();
       if (lightboxCounter) lightboxCounter.textContent = `${galleryIndex + 1} / ${galleryImgs.length}`;
       if (thumbsWrap) {
         Array.from(thumbsWrap.children).forEach((img, i) => img.classList.toggle('active', i === galleryIndex));
@@ -995,7 +1027,7 @@
           <div class="lightbox-content">
             <div class="lightbox-stage">
               <div class="lightbox-photos active" id="lightbox-photos">
-                <div class="lightbox-img-wrapper">
+                <div class="lightbox-img-wrapper" id="lightbox-img-wrapper">
                   <img id="lightbox-img" src="${galleryImgs[0] || ''}" alt="${imovel.nome}">
                   <img id="lightbox-copy-overlay" class="copy-overlay" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Copiar Imagem">
                   <img src="img/logo.svg" class="watermark" alt="Marca d'água">
