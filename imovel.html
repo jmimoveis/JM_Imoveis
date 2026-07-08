@@ -414,7 +414,15 @@
     }
     .gallery-main .copy-overlay { object-fit: cover; }
     .lightbox-img-wrapper .copy-overlay { object-fit: contain; }
-    
+
+    /* O JS ativa pointer-events no overlay após gerar a marca d'água; sem isto, o overlay
+       da lightbox fechada (position: fixed; inset: 0) fica invisível cobrindo a tela toda
+       e intercepta cliques nas setas/miniaturas da galeria principal. */
+    .lightbox:not(.active) .copy-overlay,
+    .gallery-photos-visual:not(.active) .copy-overlay {
+      pointer-events: none !important;
+    }
+
     .gallery-main:hover .watermark,
     .lightbox-img-wrapper:hover .watermark {
       opacity: 0.5;
