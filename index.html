@@ -2268,6 +2268,12 @@
         grid-column: 1 / -1;
       }
 
+      /* Evita que o menu do select fique atrás da seção "Em Destaque" (z-index: 10)
+         quando o dropdown abre perto do fim do hero */
+      .hero:has(.site-select.open) {
+        z-index: 20;
+      }
+
       /* Busca da tela inicial replica os campos do desktop, exceto Busca Livre */
       .filter-bar .filter-group:has(#filter-busca) {
         display: none;
