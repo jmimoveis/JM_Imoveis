@@ -2240,6 +2240,10 @@
         padding: calc(var(--header-height) + 1rem) 5% calc(1.5rem + 60px);
         justify-content: center;
         overflow: visible;
+        /* Sem isolamento, os filhos com z-index positivo (ex: dropdown aberto)
+           podem empilhar acima da seção #imoveis (z-index: 10) quando ultrapassam
+           os limites do hero; o próprio fundo do hero continua abaixo dela. */
+        isolation: auto;
       }
 
       .hero::before,
